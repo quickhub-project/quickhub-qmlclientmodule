@@ -197,7 +197,7 @@ Column {
 The ```SynchronizedObjectModel``` follows a similar concept as the ```SynchronizedListModel```. The only difference is that it is a synchronized key-value store that synchronizes the individual values with the UI components via property bindings. To get a feel for how it works, it's worth taking a look at the [QQmlPropertyMap](https://doc.qt.io/qt-5/qqmlpropertymap.html) documentation.
 
 ```qml
-include CloudModels 1.0
+include QuickHub 1.0
  
 SynchronizedObjectModel {
     id: userSettingsModel
