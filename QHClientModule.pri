@@ -4,6 +4,7 @@
 # It is part of the QuickHub framework - www.quickhub.org
 # Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de
 
+QT += websockets
 
 SOURCES += \
     $$PWD/src/Core/CloudModel.cpp \
