@@ -58,18 +58,18 @@ If you set the property ```serverURL``` on the QuickHub object, it will try to e
 import QuickHub 1.0 
  
 // connect to server when Component has completed
-Component.onCompleted: CloudSession.serverURL = "wss://my-quickhub-instance.io"
+Component.onCompleted: QuickHub.serverURL = "wss://my-quickhub-instance.io"
  
 Timer
 {
     id: reconnectTimer
     interval: 1000 // try to reconnect every second
-    onTriggered: CloudSession.reconnectServer()
+    onTriggered: QuickHub.reconnectServer()
 }
  
 Connections
 {
-    target: CloudSession
+    target: QuickHub
     onStateChanged:
     {
         if(QuickHub.state == QuickHub.STATE_Connected)
@@ -97,7 +97,7 @@ For a deeper understanding of how QAbstractItemModels implemented in C++ interac
 A service in QuickHub describes a set of RPCs that can be provided by a plugin at a specific address. Via QML you can communicate directly with a service using the ServiceModel object. Services are RPCs that are provided by server services and do not need to be called at first.
 
 ```qml
-import CloudModels 1.0
+import QuickHub 1.0
  
 ServiceModel
 { 
