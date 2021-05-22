@@ -37,13 +37,6 @@ QVariant DeviceHandleTreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    /*
-    if (role != Qt::DisplayRole)
-    {
-        qDebug()<<"WTF";
-
-    }*/
-
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
 
     if(role == Qt::DisplayRole)

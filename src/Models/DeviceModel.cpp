@@ -221,9 +221,8 @@ void DeviceModel::messageReceived(QVariant message)
     QString error = msg["errorstring"].toString();
 
 
-
     if(!error.isEmpty())
-        qDebug()<<Q_FUNC_INFO<<" "<<error;
+        qWarning()<<Q_FUNC_INFO<<": "<<error;
 
     QVariantMap parameters = msg["parameters"].toMap();
 
@@ -302,8 +301,6 @@ void DeviceModel::messageReceived(QVariant message)
 
     if(command =="device:meta:set")
     {
-
-        qDebug()<<"META RECEIVED";
         QString property = parameters.firstKey();
         QVariantMap data = parameters.first().toMap();
         QString key = data.firstKey();

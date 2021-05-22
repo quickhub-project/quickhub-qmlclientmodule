@@ -33,7 +33,7 @@ void ResourceCommunicationHandler::attachModel()
 {
     if(_descriptor.isEmpty() )
     {
-        qDebug()<<Q_FUNC_INFO<< "- No resource name";
+        qWarning()<<Q_FUNC_INFO<< "- No resource name";
         _attachedDescriptor = "";
         detachModel();
         return;

@@ -101,7 +101,6 @@ void Device::sendMessage(QString subject, QVariantMap data)
      msg["cmd"] = "msg";
      QVariantMap parameters;
      parameters["subject"] = subject;
-     qDebug()<<data;
      if(!data.isEmpty())
             parameters["data"] = data;
 
@@ -266,7 +265,7 @@ void Device::messageReceived(QVariant message)
                 QQmlEngine* engine = QQmlEngine::contextForObject(this)->engine();
                 if(!engine)
                 {
-                    qDebug()<<"No Engine!!";
+                    qWarning()<<Q_FUNC_INFO << "No  JS-Engine!";
                     return;
                 }
                 QJSValue argJS = engine->toScriptValue<QVariantMap>(argVariant);

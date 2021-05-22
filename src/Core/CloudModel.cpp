@@ -36,7 +36,6 @@ void CloudModel::loadLogins()
     int size = settings.beginReadArray("logins");
     for (int i = 0; i < size; ++i)
     {
-        qDebug()<<settings.value("server").toString();
         settings.setArrayIndex(i);
         QVariantMap login;
         login["userName"] = settings.value("userName").toString();
@@ -48,7 +47,6 @@ void CloudModel::loadLogins()
 
 void CloudModel::addLogin(const QVariantMap &login)
 {
-    qDebug()<<"SAVE";
     _lastLogins.insert(_server, login);
     QSettings settings;
     settings.beginWriteArray("logins");

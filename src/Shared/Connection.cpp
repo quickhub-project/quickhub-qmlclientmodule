@@ -30,8 +30,6 @@ Connection::~Connection()
 {
     if(_socket)
         _socket->close();
-
-    qDebug()<<"Connection deleted";
 }
 
 void Connection::connect(QString ident)
@@ -139,7 +137,6 @@ void Connection::socketConnected()
 
 void Connection::handleDeleted()
 {
-  //  qDebug()<<"Handle Deleted!";
     VirtualConnection* connection = static_cast<VirtualConnection*>(sender());
     QString key = _handles.key(connection,"");
     if(key != "")
@@ -244,7 +241,6 @@ void Connection::setKeepAlive(int interval, int timeout)
 
 void Connection::sendPing()
 {
-    qDebug()<<"SEND PING";
     if(!_connected)
         return;
 
@@ -257,10 +253,9 @@ void Connection::sendPing()
 void Connection::timeout()
 {
     _connected = false;
-    qDebug()<<"Timeout.";
+    qDebug()<<Q_FUNC_INFO<<": Timeout.";
     Q_EMIT disconnected();
 }
-
 
 #ifndef WEB_ASSEMBLY
 void Connection::sslErrors(const QList<QSslError> &errors)

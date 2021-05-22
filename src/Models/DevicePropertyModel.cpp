@@ -57,7 +57,6 @@ QString DevicePropertyModel::unitString() const
 
 void DevicePropertyModel::setUnitString(const QString &unitString)
 {
-    qDebug()<<"META EDIT B";
     Q_EMIT metadataEdited(_name, "unit", unitString);
 }
 
