@@ -16,7 +16,7 @@
 
 /*!
     \qmltype SynchronizedListModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits ListModelBase<QVariant>
     \instantiates SynchronizedListModel2
     \brief Provides access to QuickHub list resources

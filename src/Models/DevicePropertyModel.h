@@ -14,7 +14,7 @@
 
 /*!
     \qmltype DevicePropertyModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits QObject
     \brief This class allows access to all aspects of a device property.
 

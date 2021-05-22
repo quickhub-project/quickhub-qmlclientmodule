@@ -32,7 +32,6 @@ CloudModel::CloudModel(QObject *parent) : QObject(parent),
 
 void CloudModel::loadLogins()
 {
-    qDebug()<<"LOAD";
     QSettings settings;
     int size = settings.beginReadArray("logins");
     for (int i = 0; i < size; ++i)

@@ -13,7 +13,7 @@
 
 /*!
     \qmltype UserListModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits AbstractListModel
     \instantiates UserListModel
     \brief provides a QAbstractItemModel with all native QuickHub users

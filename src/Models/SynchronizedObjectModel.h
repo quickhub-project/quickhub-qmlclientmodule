@@ -15,7 +15,7 @@
 
 /*!
     \qmltype SynchronizedObjectModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits QQmlPropertyMap
     \instantiates SynchronizedObjectModel
     \brief Provides access to QuickHub object resources

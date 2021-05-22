@@ -14,7 +14,7 @@
 
 /*!
     \qmltype ImageCollectionModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits QAbstractListModel
     \instantiates ImageCollectionModel
     \brief Provides access to QuickHub image collections

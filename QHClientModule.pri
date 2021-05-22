@@ -43,7 +43,7 @@ HEADERS += \
     $$PWD/src/Core/ListModelBase.h \
  #   $$PWD/src/Helpers/FileUploader.h \
     $$PWD/src/Helpers/RoleFilter.h \
-    $$PWD/src/InitCloudModels.h \
+    $$PWD/src/InitQuickHub.h \
     $$PWD/src/Models/DeviceLogic.h \
     $$PWD/src/Models/DeviceLogicProperty.h \
     $$PWD/src/Models/SynchronizedListModel.h \

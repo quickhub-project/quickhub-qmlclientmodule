@@ -16,8 +16,8 @@
 
 
 /*!
-    \qmltype CloudSession
-    \inqmlmodule CloudModels
+    \qmltype QuickHub
+    \inqmlmodule QuickHub
     \inherits QObject
     \instantiates CloudModel
     \brief Encapsulates all functions around connection, login and user administration

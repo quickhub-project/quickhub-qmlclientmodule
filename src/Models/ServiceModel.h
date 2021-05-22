@@ -13,7 +13,7 @@
 
 /*!
     \qmltype ServiceModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits BaseCommunicationHandler
     \instantiates ServiceModel
     \brief Enables interaction with services.

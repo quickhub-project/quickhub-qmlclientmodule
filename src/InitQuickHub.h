@@ -4,8 +4,8 @@
  * It is part of the QuickHub framework - www.quickhub.org
  * Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de */
 
-#ifndef INITCLOUDMODELS_H
-#define INITCLOUDMODELS_H
+#ifndef INITQuickHub_H
+#define INITQuickHub_H
 
 #include "SynchronizedListModel2.h"
 #include "SynchronizedObjectModel.h"
@@ -27,7 +27,7 @@
 //#include "FileUploader.h"
 #include <qqml.h>
 
-class InitCloudModels
+class InitQuickHub
 {
 
 public:
@@ -54,4 +54,4 @@ public:
     }
 };
 
-#endif // INITCLOUDMODELS_H
+#endif // INITQuickHub_H

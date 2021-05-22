@@ -17,7 +17,7 @@
 
 /*!
     \qmltype Device
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits QQmlPropertyMap
     \instantiates Device
     \brief Allows the declarative implementation of new device types.

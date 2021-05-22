@@ -15,7 +15,7 @@
 
 /*!
     \qmltype DevicePropertyModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits QQmlPropertyMap
     \instantiates DevicePropertyModel
     \brief Provides access to QuickHub devices

@@ -12,7 +12,7 @@
 #include "DeviceHandleListModel.h"
 /*!
     \qmltype FilteredDeviceModel
-    \inqmlmodule CloudModels
+    \inqmlmodule QuickHub
     \inherits DeviceAdapterModel
     \instantiates FilteredDeviceModel
     \brief Provides a ListModel for all devices that match the specified types
