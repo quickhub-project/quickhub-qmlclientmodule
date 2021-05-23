@@ -51,7 +51,7 @@ void ResourceCommunicationHandler::attachModel()
     }
 
 
-    if((getState() == MODEL_ERROR || getState() == MODEL_READY )&& CloudModel::instance()->getState() == CloudModel::STATE_Authenticated)
+    if((getState() == MODEL_ERROR || getState() == MODEL_READY) && CloudModel::instance()->getState() == CloudModel::STATE_Authenticated)
         p_attachModel();
     else
     {
@@ -125,7 +125,7 @@ void ResourceCommunicationHandler::messageReceived(QVariant message)
 
     if(cmd == _resourceType+":detach:success"|| cmd == _resourceType+":detached")
     {
-        setModelState(MODEL_DISCONNECTED);
+        setModelState(MODEL_READY);
         qDebug()<<_resourceType+":"+_attachedDescriptor+"   -> Detached.";
         setAttached(false);
         Q_EMIT attachedChanged();

@@ -167,8 +167,4 @@ void SynchronizedObjectModel::resetProperties()
     _keys.clear();
     Q_EMIT keysChanged();
     QListIterator<QString>it(keys);
-    while(it.hasNext())
-    {
-        this->clear(it.next());
-    }
 }
