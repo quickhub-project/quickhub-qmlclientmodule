@@ -100,7 +100,7 @@ public:
     // property getter & setter
     QString resource() const;
     void setResource(const QString &resource);
-
+    QStringList keys();
     bool getConnected() const;
     ResourceCommunicationHandler::ModelState getModelState() const;
 
@@ -125,6 +125,7 @@ public slots:
 protected:
 
 private:
+    QSet<QString>                    _keys;
     ResourceCommunicationHandler*   _communicationHandler;
     QVariantMap                     _metadata;
     QVariantMap                     _objectdata;
@@ -143,9 +144,9 @@ signals:
     void initializedChanged();
     void filterChanged();
 
-
 private slots:
     void messageReceived(QVariant message);
+    void modelStateChangedSlot();
 };
 
 #endif // SYNCHRONIZEDOBJECTMODEL_H

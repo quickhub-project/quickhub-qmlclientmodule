@@ -14,7 +14,7 @@ SynchronizedObjectModel::SynchronizedObjectModel(QObject *parent) : QQmlProperty
 {
     connect(_communicationHandler,SIGNAL(newMessage(QVariant)), this, SLOT(messageReceived(QVariant)));
     connect(_communicationHandler,SIGNAL(attachedChanged()), this, SIGNAL(connectedChanged()));
-    connect(_communicationHandler,SIGNAL(stateChanged()), this, SIGNAL(modelStateChanged()));
+    connect(_communicationHandler,SIGNAL(stateChanged()), this, SLOT(modelStateChangedSlot()));
 }
 
 SynchronizedObjectModel::~SynchronizedObjectModel()
@@ -69,6 +69,8 @@ void SynchronizedObjectModel::setProperty(QString key, QVariant value)
     msg["parameters"]  = parameters;
     _communicationHandler->sendMessage(msg);
     this->insert(key, value);
+    _keys << key;
+    Q_EMIT keysChanged();
 }
 
 ResourceCommunicationHandler::ModelState SynchronizedObjectModel::getModelState() const
@@ -110,6 +112,11 @@ void SynchronizedObjectModel::setResource(const QString &resourceName)
     Q_EMIT resourceChanged();
 }
 
+QStringList SynchronizedObjectModel::keys()
+{
+    return _keys.values();
+}
+
 
 void SynchronizedObjectModel::messageReceived(QVariant message)
 {
@@ -132,6 +139,7 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
             QString key = it.key();
             QVariant value = it.value().toMap()["data"];
             this->insert(key, value);
+            _keys << key;
             _objectdata.insert(key, it.value());
         }
 
@@ -146,6 +154,24 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
     {
         QString key = parameters["property"].toString();
         QVariant value = parameters["data"];
+        _keys << key;
         this->insert(key, value);
+        Q_EMIT keysChanged();
     }
+}
+
+void SynchronizedObjectModel::modelStateChangedSlot()
+{
+    if(_communicationHandler->getState() == BaseCommunicationHandler::MODEL_DISCONNECTED)
+    {
+        QStringList keys = _keys.values();
+        _keys.clear();
+        Q_EMIT keysChanged();
+        QListIterator<QString>it(keys);
+        while(it.hasNext())
+        {
+            this->clear(it.next());
+        }
+    }
+    Q_EMIT modelStateChanged();
 }
