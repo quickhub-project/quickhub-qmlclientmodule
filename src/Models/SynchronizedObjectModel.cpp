@@ -14,7 +14,7 @@ SynchronizedObjectModel::SynchronizedObjectModel(QObject *parent) : QQmlProperty
 {
     connect(_communicationHandler,SIGNAL(newMessage(QVariant)), this, SLOT(messageReceived(QVariant)));
     connect(_communicationHandler,SIGNAL(attachedChanged()), this, SIGNAL(connectedChanged()));
-    connect(_communicationHandler,SIGNAL(stateChanged()), this, SLOT(modelStateChangedSlot()));
+    connect(_communicationHandler,SIGNAL(stateChanged()), this, SIGNAL(modelStateChanged()));
 }
 
 SynchronizedObjectModel::~SynchronizedObjectModel()
@@ -104,6 +104,7 @@ void SynchronizedObjectModel::setResource(const QString &resourceName)
     if(_resource == resourceName)
         return;
 
+    resetProperties();
     _initialized = false;
     Q_EMIT initializedChanged();
     _resource = resourceName;
@@ -160,18 +161,14 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
     }
 }
 
-void SynchronizedObjectModel::modelStateChangedSlot()
+void SynchronizedObjectModel::resetProperties()
 {
-    if(_communicationHandler->getState() == BaseCommunicationHandler::MODEL_DISCONNECTED)
+    QStringList keys = _keys.values();
+    _keys.clear();
+    Q_EMIT keysChanged();
+    QListIterator<QString>it(keys);
+    while(it.hasNext())
     {
-        QStringList keys = _keys.values();
-        _keys.clear();
-        Q_EMIT keysChanged();
-        QListIterator<QString>it(keys);
-        while(it.hasNext())
-        {
-            this->clear(it.next());
-        }
+        this->clear(it.next());
     }
-    Q_EMIT modelStateChanged();
 }

@@ -146,7 +146,7 @@ signals:
 
 private slots:
     void messageReceived(QVariant message);
-    void modelStateChangedSlot();
+    void resetProperties();
 };
 
 #endif // SYNCHRONIZEDOBJECTMODEL_H
