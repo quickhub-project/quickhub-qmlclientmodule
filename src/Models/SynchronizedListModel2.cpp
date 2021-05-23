@@ -257,6 +257,7 @@ void SynchronizedListModel2::itemPropertyChanged(int index, QString property, QV
         m_dataList.replace(index, item);
         int role = roleNames().key(property.toLatin1(), -1);
         QVector<int> roles;
+        roles << Qt::DisplayRole;
         roles << role;
         Q_EMIT dataChanged(this->index(index), this->index(index), roles);
         Q_EMIT listModified();
