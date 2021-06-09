@@ -65,6 +65,7 @@ Timer
     id: reconnectTimer
     interval: 1000 // try to reconnect every second
     onTriggered: QuickHub.reconnectServer()
+    repeat: true
 }
  
 Connections
