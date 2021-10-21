@@ -1,4 +1,4 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
+#/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * It is part of the QuickHub framework - www.quickhub.org
@@ -48,17 +48,24 @@ DeviceModel* FilteredDeviceModel::insertModel(QVariantMap modelData)
     QListIterator<QString> it(_deviceType);
     while(it.hasNext())
     {
-        QRegularExpression regex(QRegularExpression::wildcardToRegularExpression(it.next()));
-        if(regex.match(type).hasMatch())
-        {
-            hasMatch = true;
-            break;
-        }
+        #if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
+            QRegularExpression regex(QRegularExpression::wildcardToRegularExpression(it.next()));
+            if(regex.match(type).hasMatch())
+            {
+                hasMatch = true;
+                break;
+            }
+        #else
+            if(it.next() == type)
+            {
+                hasMatch = true;
+                break;
+            }
+        #endif
     }
 
     if(hasMatch)
     {
-
         QVariantList mappings = modelData["mappings"].toList();
         if(!mappings.isEmpty())
         {
