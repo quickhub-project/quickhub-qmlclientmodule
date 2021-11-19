@@ -8,6 +8,7 @@ QT += websockets
 
 SOURCES += \
     $$PWD/src/Core/CloudModel.cpp \
+    $$PWD/src/Core/ConnectionManager.cpp \
     $$PWD/src/Core/ListModelBase.cpp \
 #    $$PWD/src/Helpers/FileUploader.cpp \
     $$PWD/src/Helpers/RoleFilter.cpp \
@@ -40,6 +41,7 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/src/Core/CloudModel.h \
+    $$PWD/src/Core/ConnectionManager.h \
     $$PWD/src/Core/ListModelBase.h \
  #   $$PWD/src/Helpers/FileUploader.h \
     $$PWD/src/Helpers/RoleFilter.h \

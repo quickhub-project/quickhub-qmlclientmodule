@@ -9,7 +9,7 @@
 
 #include <QObject>
 #include "../Shared/VirtualConnection.h"
-#include "../Core/CloudModel.h"
+#include "../Core/ConnectionManager.h"
 
 class BaseCommunicationHandler : public QObject
 {
@@ -40,7 +40,7 @@ private:
     ModelState          _modelState;
     VirtualConnection*  _handle;
     bool                _connected;
-    CloudModel::ConnectionState _lastState = CloudModel::STATE_Disconnected;
+    ConnectionManager::State _lastState = ConnectionManager::STATE_Disconnected;
 
 public slots:
     virtual void attachModel();

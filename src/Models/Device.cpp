@@ -5,14 +5,14 @@
  * Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de */
 
 #include "Device.h"
-#include "../Core/CloudModel.h"
+#include "../Core/ConnectionManager.h"
 #include <QJsonParseError>
 #include <QQmlEngine>
 #include <QDebug>
 #include <QQmlContext>
 
 Device::Device(QObject *parent) : QQmlPropertyMap(this, parent),
-   _conn(new VirtualConnection(CloudModel::instance()->getConnection()))
+   _conn(new VirtualConnection(ConnectionManager::instance()->getConnection()))
 {
     connect(_conn, &VirtualConnection::connected, this, &Device::connectedSlot);
     connect(_conn, &VirtualConnection::disconnected, this, &Device::disconnectedSlot);

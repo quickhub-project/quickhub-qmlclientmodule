@@ -51,7 +51,7 @@ void ResourceCommunicationHandler::attachModel()
     }
 
 
-    if((getState() == MODEL_ERROR || getState() == MODEL_READY) && CloudModel::instance()->getState() == CloudModel::STATE_Authenticated)
+    if((getState() == MODEL_ERROR || getState() == MODEL_READY) && ConnectionManager::instance()->getState() == ConnectionManager::STATE_Authenticated)
         p_attachModel();
     else
     {
@@ -83,7 +83,7 @@ void ResourceCommunicationHandler::detachModel()
 
 void ResourceCommunicationHandler::stateChangedSlot()
 {
-    if((getState() == MODEL_READY) && _attachWhenReady && CloudModel::instance()->getState() == CloudModel::STATE_Authenticated)
+    if((getState() == MODEL_READY) && _attachWhenReady && ConnectionManager::instance()->getState() == ConnectionManager::STATE_Authenticated)
     {
           p_attachModel();
     }

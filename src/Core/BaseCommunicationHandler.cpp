@@ -12,11 +12,11 @@ BaseCommunicationHandler::BaseCommunicationHandler(QObject *parent) : QObject(pa
     _modelState(MODEL_DISCONNECTED),
     _connected(false)
 {
-    _handle = new VirtualConnection(CloudModel::instance()->getConnection());
+    _handle = new VirtualConnection(ConnectionManager::instance()->getConnection());
     connect(_handle, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
     connect(_handle,SIGNAL(messageReceived(QVariant)), this,SLOT(messageReceived(QVariant)));
     connect(_handle, SIGNAL(connected()), this, SLOT(socketConnected()));
-    connect(CloudModel::instance(), SIGNAL(onStateChanged()), this, SLOT(handleServerState()));
+    connect(ConnectionManager::instance(), SIGNAL(onStateChanged()), this, SLOT(handleServerState()));
 }
 
 BaseCommunicationHandler::~BaseCommunicationHandler()
@@ -61,13 +61,13 @@ void BaseCommunicationHandler::detachModel()
 
 void BaseCommunicationHandler::handleServerState()
 {
-    CloudModel::ConnectionState state = CloudModel::instance()->getState();
-    if(state == CloudModel::STATE_Authenticated)
+    ConnectionManager::State state = ConnectionManager::instance()->getState();
+    if(state == ConnectionManager::STATE_Authenticated)
     {
         attachModel();
     }
 
-    if(state == CloudModel::STATE_Connected && _lastState == CloudModel::STATE_Authenticated)
+    if(state == ConnectionManager::STATE_Connected && _lastState == ConnectionManager::STATE_Authenticated)
     {
         detachModel();
     }
@@ -78,10 +78,10 @@ void BaseCommunicationHandler::handleServerState()
 
 bool BaseCommunicationHandler::sendMessage(const QVariantMap &msg)
 {
-    if(CloudModel::instance()->getState() >= CloudModel::STATE_Connected)
+    if(ConnectionManager::instance()->getState() >= ConnectionManager::STATE_Connected)
     {
         QVariantMap map = msg;
-        map.insert("token",CloudModel::instance()->getToken());
+        map.insert("token",ConnectionManager::instance()->getToken());
        _handle->sendVariant(map);
        return true;
     }

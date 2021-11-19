@@ -9,11 +9,9 @@
 #define CLOUDMODEL_H
 
 #include <QObject>
-#include <QWebSocket>
 #include <QJSValue>
 #include "../Shared/Connection.h"
 #include "../Shared/VirtualConnection.h"
-
 
 /*!
     \qmltype QuickHub
@@ -25,41 +23,10 @@
 
 class QQmlEngine;
 class QJSEngine;
+class ConnectionManager;
 class CloudModel : public QObject
 {
     Q_OBJECT
-
-    /*!
-        \qmlproperty QString CloudModel::serverUrl
-        Holds the address of the QuickHub server.  When an address is assigned,
-        the connection is started automatically.
-    */
-    Q_PROPERTY(QString serverUrl READ getServer WRITE setServer NOTIFY onServerUrlChanged)
-
-    /*!
-        \qmlproperty  ConnectionState CloudModel::state
-        Holds the state of the current connection.
-    */
-    Q_PROPERTY(ConnectionState state READ getState  NOTIFY onStateChanged)
-
-    /*!
-        \qmlproperty QString CloudModel::errorString
-        In the error state an error message can be retrieved via this property.
-    */
-    Q_PROPERTY(QString errorString READ getErrorString NOTIFY onErrorStringChanged)
-
-    /*!
-        \qmlproperty QString CloudModel::token
-        Holds the session token of the currently logged in user
-    */
-    Q_PROPERTY(QString token READ getToken NOTIFY tokenChanged)
-
-    /*!
-        \qmlproperty int CloudModel::keepaliveInterval
-        Keeps the frequency in milliseconds with which the client checks via a ping whether the connection to
-        the server is still active.
-    */
-    Q_PROPERTY(int keepaliveInterval READ getKeepaliveInterval WRITE setKeepaliveInterval NOTIFY keepaliveIntervalChanged)
 
     /*!
         \qmlproperty QVariantMap CloudModel::currentUser
@@ -75,35 +42,14 @@ class CloudModel : public QObject
     */
     Q_PROPERTY(bool autoLogIn MEMBER _autoLogin NOTIFY autoLoginChanged)
 
+    /*!
+        \qmlproperty QString ConnectionState::errorString
+        In the error state an error message can be retrieved via this property.
+    */
+    Q_PROPERTY(QString errorString READ getErrorString NOTIFY onErrorStringChanged)
+
 
 public:
-    /*!
-        \enum CloudModel::ConnectionState
-        This enum specifies the state of the connection.
-
-        \value STATE_Disconnected
-            There is no connection to a server.
-        \value STATE_Connecting
-            The client tries to establich a connection
-        \value STATE_Connected
-            The client has successfully connected to the server. But
-            no user is logged in.
-        \value STATE_Authenticating
-            The client tries to login with the given user credentials.
-        \value STATE_Authenticated
-            The client is successfully connected to the server and the login process was successful.
-    */
-    enum ConnectionState
-    {
-        STATE_Disconnected = 0,
-        STATE_Connecting = 1,
-        STATE_Connected = 2,
-        STATE_Authenticating = 3,
-        STATE_Authenticated = 4
-    };
-    Q_ENUM(ConnectionState)
-
-
     /*!
         \enum CloudModel::ErrorCodes
         This enum specifies the state of the connection.
@@ -139,7 +85,6 @@ public:
     static CloudModel* instance();
     static QObject* instanceAsQObject(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
 
-    Q_INVOKABLE void connectToServer(QString server, QJSValue callback = QJSValue());
 
     /*!
         \fn void CloudModel::login(QString user, QString password, QJSValue callback = QJSValue(), bool remember = false)
@@ -253,53 +198,25 @@ public:
     */
     Q_INVOKABLE void logout();
 
-    /*!
-        \fn void CloudModel::disconnectServer()
-        Terminates the connection to the server. The client should be in the state "STATE_Disconnected"
-        after a successful call.
-    */
-    Q_INVOKABLE void disconnectServer();
 
-    /*!
-        \fn void CloudModel::reconnectServer()
-        Attempts to re-establish the last used connection.
-    */
-    Q_INVOKABLE void reconnectServer();
-//    Q_INVOKABLE void connectToHub(QString server, QJSValue callback);
-
-    Connection* getConnection();
-
-    QString getServer() const;
-    void setServer(const QString &getServer);
+//  Q_INVOKABLE void connectToHub(QString server, QJSValue callback);
 
     bool loggedIn() const;
     void setLoggedIn(bool loggedIn);
 
-    QString getToken() const;
-
-    ConnectionState getState() const;
-    void setConnectionState(const ConnectionState &onStateChanged);
-
     QString getErrorString() const;
     QString getUserID() const;
-
     QVariantMap getCurrentUser() const;
-
-    int getKeepaliveInterval();
-    void setKeepaliveInterval(int interval);
 
 private:
     explicit CloudModel(QObject *parent = nullptr);
     void loadLogins();
     void addLogin(const QVariantMap& login);
-
+    Connection*         _connection;
+    ConnectionManager*   _connectionState;
     static CloudModel*  _instance;
     QVariantMap         _user;
-    Connection*         _connection;
     VirtualConnection*  _vconnection;
-    QString             _token;
-    ConnectionState     _connectionState = STATE_Disconnected;
-    QString             _server;
     QString             _errorString;
     QString             _userID;
     QJSValue            _addUserCb;
@@ -308,18 +225,13 @@ private:
     QJSValue            _changePwCb;
     QJSValue            _setPermissionCb;
     QJSValue            _deleteUserCb;
-    QJSValue            _connectCb;
-    QMap<QString, QVariantMap>  _lastLogins;
-    int                 _keepaliveInterval = -1;
     bool                _autoLogin = false;
+    QMap<QString, QVariantMap>  _lastLogins;
 
 signals:
     void connectedChanged();
     void tokenChanged();
-    void onServerUrlChanged();
-    void onStateChanged();
     void onErrorStringChanged();
-    void keepaliveIntervalChanged();
     void currentUserChanged();
     void autoLoginChanged();
 
@@ -327,7 +239,7 @@ private slots:
     void socketConnected();
     void socketDisconnected();
     void messageReceived(const QVariant& data);
-    void socketError(QAbstractSocket::SocketError error);
+
 
 public slots:
 };

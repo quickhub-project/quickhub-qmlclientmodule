@@ -48,7 +48,8 @@ public:
         qmlRegisterType<FilteredDeviceModel>(uri, 1, 0, "FilteredDeviceModel");
         qmlRegisterType<DeviceModel>(uri, 1, 0, "DeviceModel");
         qmlRegisterType<Device>(uri, 1, 0, "Device");
-        qmlRegisterSingletonType<CloudModel>(uri, 1, 0, "QuickHub", &CloudModel::instanceAsQObject);
+        qmlRegisterSingletonType<CloudModel>(uri, 1, 0, "UserLogin", &CloudModel::instanceAsQObject);
+        qmlRegisterSingletonType<ConnectionManager>(uri, 1, 0, "Connection", &ConnectionManager::instanceAsQObject);
         qmlRegisterType<SynchronizedObjectListModel>(uri, 1, 0, "SynchronizedListLookupModel");
 //        qmlRegisterType<FileUploader>(uri, 1, 0, "FileUploader");
     }

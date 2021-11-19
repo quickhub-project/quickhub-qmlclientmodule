@@ -55,7 +55,7 @@ QVariant ImageCollectionModel::data(const QModelIndex &index, int role) const
         case SOURCE:
         {
             QString filename = _data[index.row()].toMap()["uid"].toString();
-            QString host = CloudModel::instance()->getServer().split("://").at(1);
+            QString host = ConnectionManager::instance()->getServer().split("://").at(1);
             host = host.split(":").first();
             QUrl url;
             url.setHost("127.0.0.1");
@@ -67,7 +67,7 @@ QVariant ImageCollectionModel::data(const QModelIndex &index, int role) const
 
             url.setPath(path);
             QUrlQuery query;
-            query.addQueryItem("token", CloudModel::instance()->getToken());
+            query.addQueryItem("token", ConnectionManager::instance()->getToken());
             url.setQuery(query);
             qDebug()<<url;
             return url;
