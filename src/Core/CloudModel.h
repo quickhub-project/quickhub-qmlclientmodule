@@ -213,7 +213,7 @@ private:
     void loadLogins();
     void addLogin(const QVariantMap& login);
     Connection*         _connection;
-    ConnectionManager*   _connectionState;
+    ConnectionManager*   _connectionManager;
     static CloudModel*  _instance;
     QVariantMap         _user;
     VirtualConnection*  _vconnection;
@@ -237,7 +237,6 @@ signals:
 
 private slots:
     void socketConnected();
-    void socketDisconnected();
     void messageReceived(const QVariant& data);
 
 

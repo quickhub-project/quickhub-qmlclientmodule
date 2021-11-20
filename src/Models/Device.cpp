@@ -11,9 +11,13 @@
 #include <QDebug>
 #include <QQmlContext>
 
-Device::Device(QObject *parent) : QQmlPropertyMap(this, parent),
-   _conn(new VirtualConnection(ConnectionManager::instance()->getConnection()))
+Device::Device(QObject *parent) : Device(new VirtualConnection(ConnectionManager::instance()->getConnection()), this)
 {
+}
+
+Device::Device(VirtualConnection *vconnection, QObject *parent) : QQmlPropertyMap(this, parent)
+{
+    _conn = vconnection;
     connect(_conn, &VirtualConnection::connected, this, &Device::connectedSlot);
     connect(_conn, &VirtualConnection::disconnected, this, &Device::disconnectedSlot);
     connect(_conn, &VirtualConnection::messageReceived, this, &Device::messageReceived);
@@ -21,6 +25,7 @@ Device::Device(QObject *parent) : QQmlPropertyMap(this, parent),
     {
         initDevice();
     }
+
 }
 
 Device::~Device()
@@ -205,11 +210,10 @@ void Device::disconnectedSlot()
     _initialized = false;
 }
 
-void Device::initDevice()
+void Device::initDevice(QVariantMap parameters)
 {
     QVariantMap msg;
     msg["command"] = "node:register";
-    QVariantMap parameters;
     parameters["id"] = _uuid;
     parameters["sid"] = _shortID;
     QListIterator<QString> propertyKeysIt(this->keys());

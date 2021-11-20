@@ -1,6 +1,7 @@
 #include <QApplication>
 #include "ConnectionManager.h"
 
+
 ConnectionManager* ConnectionManager::_instance = nullptr;
 
 ConnectionManager *ConnectionManager::instance()
@@ -15,6 +16,10 @@ ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
 {
     _connection = new Connection(this);
     connect(_connection, &Connection::socketError, this, &ConnectionManager::socketError);
+
+    _vconnection = new VirtualConnection(_connection);
+    connect(_vconnection, &VirtualConnection::connected, [=](){ setConnectionState(ConnectionManager::STATE_Connected);});
+    connect(_vconnection, &VirtualConnection::disconnected, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
 }
 
 void ConnectionManager::setConnectionState(const State &connectionState)
@@ -115,4 +120,9 @@ void ConnectionManager::setKeepaliveInterval(int interval)
 {
     _connection->setKeepAlive(interval);
     Q_EMIT keepaliveIntervalChanged();
+}
+
+VirtualConnection *ConnectionManager::getVConnection()
+{
+    return _vconnection;
 }

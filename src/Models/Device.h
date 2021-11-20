@@ -129,8 +129,6 @@ class Device : public QQmlPropertyMap
     */
     Q_PROPERTY(bool connected READ connected  NOTIFY connectedChanged)
 
-
-
 public:
     Device(QObject* parent = nullptr);
     ~Device();
@@ -214,7 +212,9 @@ public:
     bool connected() const;
 
 protected:
+    Device(VirtualConnection* vconnection, QObject* parent = nullptr);
     QVariant updateValue(const QString &key, const QVariant &input);
+    virtual void initDevice(QVariantMap parameters = QVariantMap());
 
 private:
     // the cache stores property changes while device is still initializing
@@ -228,7 +228,6 @@ private:
     QString                 _type;
     bool                    _initialized = false;
     bool                    _readyForInit = false;
-    void initDevice();
     void propertyDataChanged(const QString &key, const QVariant &input);
 
 signals:
@@ -244,7 +243,8 @@ private slots:
     void connectedSlot();
     void disconnectedSlot();
 
-    void messageReceived(QVariant message);
+protected slots:
+    virtual void messageReceived(QVariant message);
 
 
 };

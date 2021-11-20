@@ -90,6 +90,7 @@ public:
     Connection* getConnection();
     int getKeepaliveInterval();
     void setKeepaliveInterval(int interval);
+    VirtualConnection* getVConnection();
 
     static QObject* instanceAsQObject(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
     static ConnectionManager* instance();
@@ -103,6 +104,7 @@ private:
     QString                 _server;
     QString                 _token;
     QJSValue                _connectCb;
+    VirtualConnection*      _vconnection;
 
 private slots:
     void                    socketError(QAbstractSocket::SocketError error);

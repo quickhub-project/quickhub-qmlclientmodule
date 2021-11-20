@@ -21,14 +21,11 @@ CloudModel* CloudModel::_instance = nullptr;
 CloudModel::CloudModel(QObject *parent) : QObject(parent)
 {
     loadLogins();
-
-    _connectionState = ConnectionManager::instance();
-    _connection = _connectionState->getConnection();
-    _vconnection = new VirtualConnection(_connection);
+    _connectionManager = ConnectionManager::instance();
+    _connection = _connectionManager->getConnection();
+    _vconnection = _connectionManager->getVConnection();
     connect(_vconnection, &VirtualConnection::messageReceived, this, &CloudModel::messageReceived);
     connect(_vconnection, &VirtualConnection::connected, this, &CloudModel::socketConnected);
-    connect(_vconnection, &VirtualConnection::disconnected, this, &CloudModel::socketDisconnected);
-
 }
 
 void CloudModel::loadLogins()
@@ -48,7 +45,7 @@ void CloudModel::loadLogins()
 
 void CloudModel::addLogin(const QVariantMap &login)
 {
-    QString server = _connectionState->getServer();
+    QString server = _connectionManager->getServer();
     _lastLogins.insert(server, login);
     QSettings settings;
     settings.beginWriteArray("logins");
@@ -92,7 +89,7 @@ void CloudModel::login(QString user, QString password, QJSValue callback, bool r
         addLogin(login);
     }
 
-    if(_connectionState->getState() == ConnectionManager::STATE_Connected)
+    if(_connectionManager->getState() == ConnectionManager::STATE_Connected)
     {
         QVariantMap msg;
         msg["command"] = "user:login";
@@ -100,7 +97,7 @@ void CloudModel::login(QString user, QString password, QJSValue callback, bool r
         payload["password"] = password;
         payload["userID"] = user;
         msg["payload"] = payload;
-        _connectionState->setConnectionState(ConnectionManager::STATE_Authenticating);
+        _connectionManager->setConnectionState(ConnectionManager::STATE_Authenticating);
         _vconnection->sendVariant(msg);
         _loginCb = callback;
     }
@@ -120,11 +117,11 @@ void CloudModel::addUser(QString userID, QString password, QString eMail,  QJSVa
 
 void CloudModel::addUser(QString userID, QString password, QString eMail, QString name, QJSValue callback)
 {
-    if(_connectionState->getState() >= ConnectionManager::STATE_Connected)
+    if(_connectionManager->getState() >= ConnectionManager::STATE_Connected)
     {
         QVariantMap msg;
         msg["command"] = "user:add";
-        msg["token"] = _connectionState->getToken();
+        msg["token"] = _connectionManager->getToken();
         QVariantMap payload;
         payload["password"] = password;
         payload["userID"] = userID;
@@ -140,11 +137,11 @@ void CloudModel::addUser(QString userID, QString password, QString eMail, QStrin
 
 void CloudModel::changePassword(QString oldPassword, QString newPassword, QJSValue callback)
 {
-    if(_connectionState->getState() >= ConnectionManager::STATE_Authenticated)
+    if(_connectionManager->getState() >= ConnectionManager::STATE_Authenticated)
     {
         QVariantMap msg;
         msg["command"] = "user:changepassword";
-        msg["token"] = _connectionState->getToken();;
+        msg["token"] = _connectionManager->getToken();;
         QVariantMap payload;
         payload["oldPassword"] = oldPassword;
         payload["newPassword"] = newPassword;
@@ -156,11 +153,11 @@ void CloudModel::changePassword(QString oldPassword, QString newPassword, QJSVal
 
 void CloudModel::setPermission(QString userID, QString permission, bool allowed, QJSValue callback)
 {
-    if(_connectionState->getState() >= ConnectionManager::STATE_Authenticated)
+    if(_connectionManager->getState() >= ConnectionManager::STATE_Authenticated)
     {
         QVariantMap msg;
         msg["command"] = "user:setpermission";
-        msg["token"] = _connectionState->getToken();;
+        msg["token"] = _connectionManager->getToken();;
         QVariantMap payload;
         payload["userID"] = userID;
         payload["permission"] = permission;
@@ -173,11 +170,11 @@ void CloudModel::setPermission(QString userID, QString permission, bool allowed,
 
 void CloudModel::deleteUser(QString userID, QJSValue callback)
 {
-    if(_connectionState->getState() >= ConnectionManager::STATE_Authenticated)
+    if(_connectionManager->getState() >= ConnectionManager::STATE_Authenticated)
     {
         QVariantMap msg;
         msg["command"] = "user:delete";
-        msg["token"] = _connectionState->getToken();;
+        msg["token"] = _connectionManager->getToken();;
         QVariantMap payload;
         payload["userID"] = userID;
         msg["payload"] = payload;
@@ -188,11 +185,11 @@ void CloudModel::deleteUser(QString userID, QJSValue callback)
 
 void CloudModel::deleteCurrentUser(QString password, QJSValue callback)
 {
-    if(_connectionState->getState() >= ConnectionManager::STATE_Authenticated)
+    if(_connectionManager->getState() >= ConnectionManager::STATE_Authenticated)
     {
         QVariantMap msg;
         msg["command"] = "user:delete";
-        msg["token"] = _connectionState->getToken();;
+        msg["token"] = _connectionManager->getToken();;
         QVariantMap payload;
         payload["userID"] = _userID;
         payload["password"] = password;
@@ -204,11 +201,11 @@ void CloudModel::deleteCurrentUser(QString password, QJSValue callback)
 
 void CloudModel::logout()
 {
-    if(_connectionState->getState() == ConnectionManager::STATE_Authenticated)
+    if(_connectionManager->getState() == ConnectionManager::STATE_Authenticated)
     {
         QVariantMap msg;
         msg["command"] = "user:logout";
-        msg["token"] = _connectionState->getToken();;
+        msg["token"] = _connectionManager->getToken();;
         _vconnection->sendVariant(msg);
     }
 }
@@ -225,21 +222,13 @@ void CloudModel::setupTunnel(QString server, QJSValue callback)
     _vconnection->sendVariant(msg);
 }
 
-
 void CloudModel::socketConnected()
 {
-    _connectionState->setConnectionState(ConnectionManager::STATE_Connected);
-    qDebug()<<_lastLogins.count();
-    QString server = _connectionState->getServer();
+    QString server = _connectionManager->getServer();
     if( _autoLogin && _lastLogins.contains(server))
     {
         login(_lastLogins[server]["userName"].toString(), _lastLogins[server]["password"].toString());
     }
-}
-
-void CloudModel::socketDisconnected()
-{
-     _connectionState->setConnectionState(ConnectionManager::STATE_Disconnected); ;
 }
 
 void CloudModel::messageReceived(const QVariant& data)
@@ -271,8 +260,8 @@ void CloudModel::messageReceived(const QVariant& data)
 
     if(command == "user:login:success")
     {
-        _connectionState->setToken(payload["token"].toString());
-        _connectionState->setConnectionState(ConnectionManager::STATE_Authenticated);
+        _connectionManager->setToken(payload["token"].toString());
+        _connectionManager->setConnectionState(ConnectionManager::STATE_Authenticated);
         _user = payload["user"].toMap();
         Q_EMIT currentUserChanged();
         _loginCb.call(QJSValueList { true, 0 });
@@ -281,7 +270,7 @@ void CloudModel::messageReceived(const QVariant& data)
 
     if(command == "user:login:failed")
     {
-        _connectionState->setConnectionState(ConnectionManager::STATE_Connected);
+        _connectionManager->setConnectionState(ConnectionManager::STATE_Connected);
         int errorCode =  answer["errrorcode"].toInt();
         _errorString =  answer["errorstring"].toString();
         Q_EMIT onErrorStringChanged();
@@ -291,7 +280,7 @@ void CloudModel::messageReceived(const QVariant& data)
 
     if(command == "logout:success")
     {
-         _connectionState->setConnectionState(ConnectionManager::STATE_Connected);
+         _connectionManager->setConnectionState(ConnectionManager::STATE_Connected);
         return;
     }
 
@@ -334,8 +323,6 @@ void CloudModel::messageReceived(const QVariant& data)
     if(command == "user:setpermission:failed")
     {
         int errorCode =  answer["errrorcode"].toInt();
-        // _errorString =  answer["errorstring"].toString();
-       // Q_EMIT onErrorStringChanged(); TODO
         _setPermissionCb.call(QJSValueList { false , errorCode});
         return;
     }
