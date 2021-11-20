@@ -24,6 +24,7 @@
 #include "ServiceModel.h"
 #include "SynchronizedObjectListModel.h"
 #include "FilteredDeviceModel.h"
+#include "StandaloneDevice.h"
 //#include "FileUploader.h"
 #include <qqml.h>
 
@@ -50,7 +51,9 @@ public:
         qmlRegisterType<Device>(uri, 1, 0, "Device");
         qmlRegisterSingletonType<CloudModel>(uri, 1, 0, "UserLogin", &CloudModel::instanceAsQObject);
         qmlRegisterSingletonType<ConnectionManager>(uri, 1, 0, "Connection", &ConnectionManager::instanceAsQObject);
+        qmlRegisterSingletonType<StandaloneDevice>(uri, 1, 0, "StandaloneDevice", &StandaloneDevice::instanceAsQObject);
         qmlRegisterType<SynchronizedObjectListModel>(uri, 1, 0, "SynchronizedListLookupModel");
+
 //        qmlRegisterType<FileUploader>(uri, 1, 0, "FileUploader");
     }
 };
