@@ -75,7 +75,8 @@ void DeviceModel::setResource(const QString &resource)
 QList<QObject*> DeviceModel::properties() const
 {
     QObjectList objects;
-    QListIterator<DevicePropertyModel*> it(_properties.values());
+    auto tempPropVals = _properties.values();
+    QListIterator<DevicePropertyModel*> it(tempPropVals);
     while(it.hasNext())
     {
         objects << it.next();

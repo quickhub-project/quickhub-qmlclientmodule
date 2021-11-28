@@ -1,8 +1,8 @@
 #include "StandaloneDevice.h"
 #include "ConnectionManager.h"
 #include <QApplication>
-
 #include <QMetaObject>
+#include <QDebug>
 
 StandaloneDevice* StandaloneDevice::_instance = nullptr;
 
