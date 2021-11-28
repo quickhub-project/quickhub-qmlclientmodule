@@ -214,8 +214,7 @@ void Device::initDevice(QVariantMap parameters)
     msg["command"] = "node:register";
     parameters["id"] = _uuid;
     parameters["sid"] = _shortID;
-    auto tempKeys = this->keys();
-    QListIterator<QString> propertyKeysIt(tempKeys);
+    QListIterator<QString> propertyKeysIt(this->keys());
     QVariantMap properties;
     while(propertyKeysIt.hasNext())
     {
@@ -227,8 +226,7 @@ void Device::initDevice(QVariantMap parameters)
 
 
     QVariantList functions;
-    auto tempFuncKeys = _functions.keys();
-    QListIterator<QString> funcKeysIt(tempFuncKeys);
+    QListIterator<QString> funcKeysIt(_functions.keys());
     while(funcKeysIt.hasNext())
     {
         const QString& key = funcKeysIt.next();
