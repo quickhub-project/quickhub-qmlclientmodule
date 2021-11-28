@@ -122,7 +122,8 @@ void DeviceAdapterModel::reIndex()
     for(int i = 0; i < _models.length(); i++)
     {
         DeviceModel* model = _models.at(i);
-        QListIterator<DevicePropertyModel*> properties(model->deviceProperties().values());
+        auto tempProps = model->deviceProperties().values();
+        QListIterator<DevicePropertyModel*> properties(tempProps);
         while(properties.hasNext())
         {
             DevicePropertyModel* model = properties.next();
@@ -149,7 +150,8 @@ void DeviceAdapterModel::propertiesChanged()
 {
     auto model = qobject_cast<DeviceModel*>(sender());
     int index = _models.indexOf(model);
-    QListIterator<DevicePropertyModel*> properties(model->deviceProperties().values());
+    auto tempProps = model->deviceProperties().values();
+    QListIterator<DevicePropertyModel*> properties(tempProps);
     while(properties.hasNext())
     {
         DevicePropertyModel* model = properties.next();

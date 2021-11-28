@@ -1,11 +1,13 @@
 #include "StandaloneDevice.h"
 #include "ConnectionManager.h"
 #include <QApplication>
-
+#include <QDebug>
 StandaloneDevice* StandaloneDevice::_instance = nullptr;
 
 StandaloneDevice::StandaloneDevice(QObject *parent) : Device(ConnectionManager::instance()->getVConnection(), parent)
 {
+    this->setUuid(QSysInfo::machineUniqueId());
+    qDebug()<<this->uuid();
 }
 
 void StandaloneDevice::initDevice(QVariantMap parameters)
