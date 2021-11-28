@@ -4,7 +4,7 @@
 # It is part of the QuickHub framework - www.quickhub.org
 # Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de
 
-QT += websockets
+QT += websockets widgets
 
 SOURCES += \
     $$PWD/src/Core/CloudModel.cpp \
@@ -81,5 +81,4 @@ INCLUDEPATH +=  $$PWD/src/Models \
 
 RESOURCES +=
 
-QT += widgets
 

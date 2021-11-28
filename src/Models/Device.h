@@ -130,7 +130,7 @@ class Device : public QQmlPropertyMap
     Q_PROPERTY(bool connected READ connected  NOTIFY connectedChanged)
 
 public:
-    Device(QObject* parent = nullptr);
+    explicit Device(QObject* parent = nullptr);
     ~Device();
 
     /*!
@@ -211,8 +211,22 @@ public:
     bool initialized() const;
     bool connected() const;
 
+
 protected:
-    Device(VirtualConnection* vconnection, QObject* parent = nullptr);
+    template <typename Derived>
+    explicit Device(Derived *derived, VirtualConnection* vconnection, QObject *parent = nullptr)
+        : QQmlPropertyMap(derived, parent)
+    {
+        _conn = vconnection;
+        connect(_conn, &VirtualConnection::connected, this, &Device::connectedSlot);
+        connect(_conn, &VirtualConnection::disconnected, this, &Device::disconnectedSlot);
+        connect(_conn, &VirtualConnection::messageReceived, this, &Device::messageReceived);
+        if(_conn->getConnectionState() == VirtualConnection::CONNECTED)
+        {
+            initDevice();
+        }
+    }
+
     QVariant updateValue(const QString &key, const QVariant &input);
     virtual void initDevice(QVariantMap parameters = QVariantMap());
 

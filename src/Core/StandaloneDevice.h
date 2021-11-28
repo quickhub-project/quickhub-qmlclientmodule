@@ -1,7 +1,4 @@
-#ifndef BASEDEVICE_H
-#define BASEDEVICE_H
-
-#include <QObject>
+#pragma once
 #include "../Models/Device.h"
 
 class QQmlEngine;
@@ -10,21 +7,19 @@ class StandaloneDevice : public Device
     Q_OBJECT
 
 public:
-    Q_INVOKABLE void requestPermission(QString permission, bool granted);
     static QObject* instanceAsQObject(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
     static StandaloneDevice* instance();
+    Q_INVOKABLE void setPermission(QString permission, bool granted);
 
 protected:
     virtual void initDevice(QVariantMap parameters = QVariantMap()) override;
     QVariantMap _permissions;
 
 private:
-    static StandaloneDevice* _instance;
     StandaloneDevice(QObject* parent = nullptr);
+    static StandaloneDevice* _instance;
 
 protected slots:
     virtual void messageReceived(QVariant message) override;
-
 };
 
-#endif // BASEDEVICE_H

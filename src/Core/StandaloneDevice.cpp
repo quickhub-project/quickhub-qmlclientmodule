@@ -2,10 +2,13 @@
 #include "ConnectionManager.h"
 #include <QApplication>
 
+#include <QMetaObject>
+
 StandaloneDevice* StandaloneDevice::_instance = nullptr;
 
-StandaloneDevice::StandaloneDevice(QObject *parent) : Device(ConnectionManager::instance()->getVConnection(), parent)
+StandaloneDevice::StandaloneDevice(QObject *parent) : Device(this, ConnectionManager::instance()->getVConnection(), parent)
 {
+    this->setUuid(QSysInfo::machineUniqueId());
 }
 
 void StandaloneDevice::initDevice(QVariantMap parameters)
@@ -32,7 +35,7 @@ void StandaloneDevice::messageReceived(QVariant message)
     Device::messageReceived(message);
 }
 
-void StandaloneDevice::requestPermission(QString permission, bool granted)
+void StandaloneDevice::setPermission(QString permission, bool granted)
 {
     _permissions.insert(permission, granted);
 }
@@ -47,7 +50,7 @@ QObject *StandaloneDevice::instanceAsQObject(QQmlEngine *engine, QJSEngine *scri
 StandaloneDevice *StandaloneDevice::instance()
 {
     if(_instance == nullptr)
-        _instance = new StandaloneDevice(qApp);
-
+        _instance = new StandaloneDevice();
     return _instance;
 }
+
