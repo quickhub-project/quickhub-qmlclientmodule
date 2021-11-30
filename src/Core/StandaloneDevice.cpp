@@ -8,7 +8,10 @@ StandaloneDevice* StandaloneDevice::_instance = nullptr;
 
 StandaloneDevice::StandaloneDevice(QObject *parent) : Device(this, ConnectionManager::instance()->getVConnection(), parent)
 {
+#if QT_VERSION > QT_VERSION_CHECK(5, 11, 0)
     this->setUuid(QSysInfo::machineUniqueId());
+#endif
+
 }
 
 void StandaloneDevice::initDevice(QVariantMap parameters)
