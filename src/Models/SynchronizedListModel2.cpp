@@ -13,7 +13,7 @@
 #include "../Core/CloudModel.h"
 
 
-SynchronizedListModel2::SynchronizedListModel2(QObject *parent) : ListModelBase(parent),
+SynchronizedListModel2::SynchronizedListModel2(QObject *parent) : ListModelBase<QVariant>(parent),
     _logic(new SynchronizedListLogic(this))
 {
     connect(_logic, &SynchronizedListLogic::resourceChanged, this, &SynchronizedListModel2::resourceChanged);

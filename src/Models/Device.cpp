@@ -13,7 +13,7 @@
 
 
 
-Device::Device(QObject *parent) : QQmlPropertyMap(parent)
+Device::Device(QObject *parent) : QQmlPropertyMap(this, parent)
 {
     _conn = new VirtualConnection(ConnectionManager::instance()->getConnection());
     connect(_conn, &VirtualConnection::connected, this, &Device::connectedSlot);
@@ -240,7 +240,7 @@ void Device::initDevice(QVariantMap parameters)
     parameters["type"] = _type;
     parameters["key"] = _settings.value("Devices/"+uuid()+"_key", 0).toUInt();
     msg["parameters"] = parameters;
-    qDebug()<<msg;
+
     _conn->sendVariant(msg);
     _initialized = true;
     Q_EMIT initializedChanged();

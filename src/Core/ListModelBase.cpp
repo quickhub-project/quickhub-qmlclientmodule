@@ -5,7 +5,7 @@
  * Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de */
 
 #include "ListModelBase.h"
-
+#include <QtDebug>
 
 template <class ItemType>
 ListModelBase<ItemType>::ListModelBase(QObject *parent)
