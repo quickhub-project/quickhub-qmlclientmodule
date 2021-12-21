@@ -97,6 +97,7 @@ public:
 
 private:
     explicit ConnectionManager(QObject *parent = nullptr);
+    virtual ~ConnectionManager();
     static ConnectionManager* _instance;
     Connection*             _connection;
     int                     _keepaliveInterval = -1;

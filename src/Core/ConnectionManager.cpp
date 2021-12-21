@@ -18,8 +18,12 @@ ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
     connect(_connection, &Connection::socketError, this, &ConnectionManager::socketError);
 
     _vconnection = new VirtualConnection(_connection);
-    connect(_vconnection, &VirtualConnection::connected, [=](){ setConnectionState(ConnectionManager::STATE_Connected);});
-    connect(_vconnection, &VirtualConnection::disconnected, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
+    connect(_vconnection, &VirtualConnection::connected, this, [=](){ setConnectionState(ConnectionManager::STATE_Connected);});
+    connect(_vconnection,  &VirtualConnection::disconnected, this, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
+}
+
+ConnectionManager::~ConnectionManager()
+{
 }
 
 void ConnectionManager::setConnectionState(const State &connectionState)
