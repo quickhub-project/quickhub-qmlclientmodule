@@ -18,6 +18,7 @@ void StandaloneDevice::initDevice(QVariantMap parameters)
 {
     Q_UNUSED(parameters)
     ConnectionManager::instance()->setConnectionState(ConnectionManager::STATE_Authenticating);
+    ConnectionManager::instance()->setKeepaliveInterval(5000);
     QVariantMap params;
     params["permissions"] = _permissions;
     Device::initDevice(params);
