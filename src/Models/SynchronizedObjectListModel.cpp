@@ -289,6 +289,6 @@ void SynchronizedObjectListModel::itemPropertyChanged(int index, QString propert
     if(map == nullptr)
         return;
 
-    map->setProperty(property.toLatin1(), data);
+    map->insert(property.toLatin1(), data);
 }
 

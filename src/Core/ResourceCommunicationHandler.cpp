@@ -135,8 +135,6 @@ void ResourceCommunicationHandler::messageReceived(QVariant message)
     }
 
     Q_EMIT newMessage(message);
-
-
 }
 
 
