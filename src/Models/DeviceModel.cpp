@@ -329,9 +329,11 @@ void DeviceModel::messageReceived(QVariant message)
             it.next();
             QString key = it.key();
             QVariant val = it.value();
+
             if(key == "real")
             {
                 model->setRealValue(val);
+                this->insert(property, val);
             }
 
             if(key == "set")
