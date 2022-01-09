@@ -120,9 +120,9 @@ int ConnectionManager::getKeepaliveInterval()
     return _keepaliveInterval;
 }
 
-void ConnectionManager::setKeepaliveInterval(int interval)
+void ConnectionManager::setKeepaliveInterval(int interval, int timeout)
 {
-    _connection->setKeepAlive(interval);
+    _connection->setKeepAlive(interval, timeout);
     Q_EMIT keepaliveIntervalChanged();
 }
 

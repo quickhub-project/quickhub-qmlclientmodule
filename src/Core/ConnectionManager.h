@@ -89,7 +89,7 @@ public:
     void setServer(const QString &server);
     Connection* getConnection();
     int getKeepaliveInterval();
-    void setKeepaliveInterval(int interval);
+    void setKeepaliveInterval(int interval, int timeout = 2500);
     VirtualConnection* getVConnection();
 
     static QObject* instanceAsQObject(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
