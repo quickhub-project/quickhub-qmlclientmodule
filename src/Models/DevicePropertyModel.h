@@ -65,16 +65,12 @@ class DevicePropertyModel : public QObject
     */
     Q_PROPERTY(QString unitString READ unitString WRITE setUnitString NOTIFY unitStringChanged)
 
-    // well,I do not believe that this property has ever been used.
-    // It just returns false... I mark it as deprecated for now.
-    Q_PROPERTY(bool confirmed READ getConfirmed NOTIFY confirmed)
-
     /*!
        \qmlproperty qlonglong DevicePropertyModel::confirmedTimestamp
        This property holds the timestamp when the last property change reqeust was confirmed by the device.
        The returned value are msecs since epoch.
     */
-    Q_PROPERTY(qlonglong confirmedTimestamp READ confirmedTimestamp NOTIFY confirmedTimestampChanged)
+    Q_PROPERTY(qlonglong timestamp READ timestamp NOTIFY timestampChanged)
 
     /*!
        \qmlproperty qlonglong DevicePropertyModel::iconId
@@ -122,24 +118,24 @@ public:
     void        setDescription(const QString &description);
 
     bool        isDirty() const;
-    qlonglong   confirmedTimestamp() const;
+
+    qlonglong   timestamp() const;
+
 
     QString     iconId() const;
     void        setIconId(const QString &iconId);
 
-    bool        getConfirmed();
     QVariantMap toMap() const;
 
     bool        getEditable() const;
-    void        setEditable(bool editable);
+
 
 signals:
     void realValueChanged(QString name, QVariant realValue);
     void setValueChanged(QString name, QVariant setValue);
     void dirtyChanged(QString name, bool isDirty);
-    void confirmed(bool accepted);
     void unitStringChanged(QString name, QString unit);
-    void confirmedTimestampChanged(QString name, qlonglong timestamp);
+    void timestampChanged(QString name, qlonglong timestamp);
     void iconIdChanged(QString name, QString iconId);
     void descriptionChanged(QString name, QString description);
     void nameChanged();
@@ -154,8 +150,10 @@ signals:
     void sendValueToDevice(QString name, QVariant property);
 
 private:
+    void setEditable(bool editable);
     void setMedatada(QString key, QVariant value);
     void setRealValue(const QVariant &getRealValue);
+    void setTimestamp(qlonglong timestamp);
     void setSetValue(const QVariant &setValue);
     void setDirty(bool isDirty);
     void init(QVariantMap initData);
@@ -173,9 +171,8 @@ private:
     QString       _description;
     bool          _dirty;
     bool          _initialized = false;
-    qlonglong     _confirmedTimestamp;
+    qlonglong     _timestamp;
     QString       _iconId;
-
 };
 
 #endif // DEVICEPROPERTYMODEL_H

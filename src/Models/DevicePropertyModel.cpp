@@ -75,7 +75,7 @@ bool DevicePropertyModel::isDirty() const
     return _dirty;
 }
 
-qlonglong DevicePropertyModel::confirmedTimestamp() const
+qlonglong DevicePropertyModel::timestamp() const
 {
     return 0;
 }
@@ -88,11 +88,6 @@ QString DevicePropertyModel::iconId() const
 void DevicePropertyModel::setIconId(const QString &iconId)
 {
     Q_EMIT metadataEdited(_name, "icon", iconId);
-}
-
-bool DevicePropertyModel::getConfirmed()
-{
-    return false;
 }
 
 QVariantMap DevicePropertyModel::toMap() const
@@ -130,6 +125,15 @@ void DevicePropertyModel::setRealValue(const QVariant &realValue)
     Q_EMIT realValueChanged(_name, realValue);
 }
 
+void DevicePropertyModel::setTimestamp(qlonglong timestamp)
+{
+    if(_timestamp == timestamp)
+        return;
+
+    _timestamp = timestamp;
+    Q_EMIT timestampChanged(_name, timestamp);
+}
+
 void DevicePropertyModel::setSetValue(const QVariant &setValue)
 {
     if(_setValue == setValue)
@@ -152,7 +156,7 @@ void DevicePropertyModel::init(QVariantMap initData)
 {
     _realValue              = initData["val"];
     _setValue               = initData["setVal"];
-    _confirmedTimestamp     = initData["confTS"].toLongLong();
+    _timestamp              = initData["timestamp"].toLongLong();
     _dirty                  = initData["dirty"].toBool();
     _metadata               = initData["metadata"].toMap();
 
@@ -160,7 +164,7 @@ void DevicePropertyModel::init(QVariantMap initData)
     _description            = _metadata["desc"].toString();
     _iconId                 = _metadata["icon"].toString();
 
-    Q_EMIT confirmedTimestampChanged(_name,_confirmedTimestamp);
+    Q_EMIT timestampChanged(_name,_timestamp);
     Q_EMIT setValueChanged(_name, _setValue);
     Q_EMIT realValueChanged(_name, _realValue);
     Q_EMIT unitStringChanged(_name, _unitString);

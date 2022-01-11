@@ -345,6 +345,11 @@ void DeviceModel::messageReceived(QVariant message)
             {
                 model->setDirty(val.toBool());
             }
+
+            if(key == "timestamp")
+            {
+                model->setTimestamp(val.toLongLong());
+            }
         }
 
         model->emitValueChanged();
