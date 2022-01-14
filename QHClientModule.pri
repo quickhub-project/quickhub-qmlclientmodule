@@ -30,7 +30,7 @@ SOURCES += \
     $$PWD/src/Models/SynchronizedListModel2.cpp \
     $$PWD/src/Models/Device.cpp \
     $$PWD/src/Models/DevicePropertyModel.cpp \
-    $$PWD/src/Helpers/AutomationRule.cpp \
+ #   $$PWD/src/Helpers/AutomationRule.cpp \
     $$PWD/src/Models/DeviceHandleTreeModel.cpp \
     $$PWD/src/Models/TreeItem.cpp \
     $$PWD/src/Models/ImageCollectionModel.cpp \
@@ -65,7 +65,7 @@ HEADERS += \
     $$PWD/src/Models/SynchronizedListModel2.h \
     $$PWD/src/Models/Device.h \
     $$PWD/src/Models/DevicePropertyModel.h \
-    $$PWD/src/Helpers/AutomationRule.h \
+  #  $$PWD/src/Helpers/AutomationRule.h \
     $$PWD/src/Models/DeviceHandleTreeModel.h \
     $$PWD/src/Models/TreeItem.h \
     $$PWD/src/Models/ImageCollectionModel.h \

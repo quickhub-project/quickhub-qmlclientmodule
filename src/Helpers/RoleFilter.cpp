@@ -79,10 +79,26 @@ bool RoleFilter::lessThan(const QModelIndex &source_left, const QModelIndex &sou
         int role = sourceModel()->roleNames().key(_sortRoleString.toLatin1());
         QVariant l = source_left.data(role);
         QVariant r = source_right.data(role);
-        if(_inverse)
-            return l < r;
-        else
-            return r < l;
+
+        if(l.canConvert<int>()){
+            if(_inverse)
+                return l.toInt() < r.toInt();
+            else
+                return r.toInt() < l.toInt();
+        }
+        else if(l.canConvert<float>()){
+            if(_inverse)
+                return l.toFloat() < r.toFloat();
+            else
+                return r.toFloat() < l.toFloat();
+        }
+        else if(l.canConvert<QString>()){
+            if(_inverse)
+                return l.toString() < r.toString();
+            else
+                return r.toString() < l.toString();
+        }
+
     }
 
     if(!_booleanSortRoleName.isEmpty())
