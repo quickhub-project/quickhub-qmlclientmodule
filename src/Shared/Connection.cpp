@@ -267,6 +267,6 @@ void Connection::sslErrors(const QList<QSslError> &errors)
     // The proper way to handle self-signed certificates is to add a custom root
     // to the CA store.
 
-    _socket->ignoreSslErrors();
+    // _socket->ignoreSslErrors();
 }
 #endif
