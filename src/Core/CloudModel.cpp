@@ -20,7 +20,7 @@ CloudModel* CloudModel::_instance = nullptr;
 
 CloudModel::CloudModel(QObject *parent) : QObject(parent)
 {
-    loadLogins();
+    loadSettings();
     _connectionManager = ConnectionManager::instance();
     _connection = _connectionManager->getConnection();
     _vconnection = _connectionManager->getVConnection();
@@ -28,7 +28,7 @@ CloudModel::CloudModel(QObject *parent) : QObject(parent)
     connect(_vconnection, &VirtualConnection::connected, this, &CloudModel::socketConnected);
 }
 
-void CloudModel::loadLogins()
+void CloudModel::loadSettings()
 {
     QSettings settings;
     int size = settings.beginReadArray("logins");
@@ -41,6 +41,8 @@ void CloudModel::loadLogins()
         _lastLogins [settings.value("server").toString()] = login;
     }
     settings.endArray();
+    _autoLogin = settings.value("autoLogin", false).toBool();
+     Q_EMIT autoLoginChanged();
 }
 
 void CloudModel::addLogin(const QVariantMap &login)
@@ -60,7 +62,23 @@ void CloudModel::addLogin(const QVariantMap &login)
         settings.setValue("server", it.key());
     }
     settings.endArray();
-    settings.setValue("lastLogin", server);
+}
+
+bool CloudModel::autoLogin() const
+{
+    return _autoLogin;
+}
+
+void CloudModel::setAutoLogin(bool newAutoLogin)
+{
+    if (_autoLogin == newAutoLogin)
+        return;
+
+    _autoLogin = newAutoLogin;
+    QSettings settings;
+    settings.setValue("autoLogin", _autoLogin);
+
+    emit autoLoginChanged();
 }
 
 CloudModel *CloudModel::instance()
@@ -78,10 +96,10 @@ QObject *CloudModel::instanceAsQObject(QQmlEngine *engine, QJSEngine *scriptEngi
     return instance();
 }
 
-void CloudModel::login(QString user, QString password, QJSValue callback, bool remember)
+void CloudModel::login(QString user, QString password, QJSValue callback, bool rememberLogin)
 {
     _userID = user;
-    if(remember)
+    if(rememberLogin)
     {
         QVariantMap login;
         login["userName"] = user;

@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "ConnectionManager.h"
-
+#include <QSettings>
 
 ConnectionManager* ConnectionManager::_instance = nullptr;
 
@@ -18,12 +18,44 @@ ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
     connect(_connection, &Connection::socketError, this, &ConnectionManager::socketError);
 
     _vconnection = new VirtualConnection(_connection);
-    connect(_vconnection, &VirtualConnection::connected, this, [=](){ setConnectionState(ConnectionManager::STATE_Connected);});
+    connect(_vconnection, &VirtualConnection::connected, this, [=](){
+        QSettings settings;
+        settings.setValue("lastServer", _server);
+        setConnectionState(ConnectionManager::STATE_Connected);
+    });
     connect(_vconnection,  &VirtualConnection::disconnected, this, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
+
+    QSettings settings;
+    _autoConnect = settings.value("autoConnect", false).toBool();
+    if(_autoConnect)
+    {
+        QString server = settings.value("lastServer", "").toString();
+        if(!server.isEmpty())
+        {
+            setServer(server);
+        }
+    }
 }
 
 ConnectionManager::~ConnectionManager()
 {
+}
+
+bool ConnectionManager::autoConnect() const
+{
+    return _autoConnect;
+}
+
+void ConnectionManager::setAutoConnect(bool newAutoConnect)
+{
+    if (_autoConnect == newAutoConnect)
+        return;
+
+    QSettings settings;
+    settings.setValue("autoConnect", newAutoConnect);
+
+    _autoConnect = newAutoConnect;
+    emit autoConnectChanged();
 }
 
 void ConnectionManager::setConnectionState(const State &connectionState)

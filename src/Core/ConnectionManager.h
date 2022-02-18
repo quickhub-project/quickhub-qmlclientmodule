@@ -95,6 +95,9 @@ public:
     static QObject* instanceAsQObject(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
     static ConnectionManager* instance();
 
+    bool autoConnect() const;
+    void setAutoConnect(bool newAutoConnect);
+
 private:
     explicit ConnectionManager(QObject *parent = nullptr);
     virtual ~ConnectionManager();
@@ -106,6 +109,9 @@ private:
     QString                 _token;
     QJSValue                _connectCb;
     VirtualConnection*      _vconnection;
+    bool                    _autoConnect = false;
+
+    Q_PROPERTY(bool autoConnect READ autoConnect WRITE setAutoConnect NOTIFY autoConnectChanged)
 
 private slots:
     void                    socketError(QAbstractSocket::SocketError error);
@@ -115,6 +121,7 @@ signals:
     void onServerUrlChanged();
     void tokenChanged();
     void keepaliveIntervalChanged();
+    void autoConnectChanged();
 };
 
 #endif // AUTHENTICATIONSTATE_H
