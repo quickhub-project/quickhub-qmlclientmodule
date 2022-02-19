@@ -28,7 +28,7 @@
 //#include "FileUploader.h"
 #include <qqml.h>
 
-#ifdef Q_OS_WASM
+#ifdef WEB_ASSEMBLY
 #include "QWasmSettings/qwasmsettings.h"
 #endif
 
@@ -38,7 +38,7 @@ class InitQuickHub
 public:
     static void registerTypes(const char *uri)
     {
-        #ifdef Q_OS_WASM
+        #ifdef WEB_ASSEMBLY
         QWasmSettings::registerFormat(true); // register the format and make it the default format
         #endif
         qmlRegisterUncreatableType<ResourceCommunicationHandler>(uri, 1, 0, "ModelState", "only to access enumTypes");
