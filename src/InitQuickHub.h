@@ -27,20 +27,11 @@
 #include "StandaloneDevice.h"
 //#include "FileUploader.h"
 #include <qqml.h>
-
-#ifdef WEB_ASSEMBLY
-#include "QWasmSettings/qwasmsettings.h"
-#endif
-
 class InitQuickHub
 {
-
 public:
     static void registerTypes(const char *uri)
     {
-        #ifdef WEB_ASSEMBLY
-        QWasmSettings::registerFormat(true); // register the format and make it the default format
-        #endif
         qmlRegisterUncreatableType<ResourceCommunicationHandler>(uri, 1, 0, "ModelState", "only to access enumTypes");
         qmlRegisterUncreatableType<DevicePropertyModel>(uri, 1, 0, "DevicePropertyModel", "only to access enumTypes");
         qmlRegisterType<SynchronizedListModel2>(uri, 1, 0, "SynchronizedListModel");

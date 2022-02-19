@@ -115,7 +115,7 @@ private:
 
 private slots:
     void                    socketError(QAbstractSocket::SocketError error);
-
+    void                    loadSettings();
 signals:
     void onStateChanged();
     void onServerUrlChanged();

@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "ConnectionManager.h"
-#include <QSettings>
+#include "Helpers/QHSettings.h"
 
 ConnectionManager* ConnectionManager::_instance = nullptr;
 
@@ -19,22 +19,14 @@ ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
 
     _vconnection = new VirtualConnection(_connection);
     connect(_vconnection, &VirtualConnection::connected, this, [=](){
-        QSettings settings;
-        settings.setValue("lastServer", _server);
+        QHSettings::instance()->setValue("lastServer", _server);
         setConnectionState(ConnectionManager::STATE_Connected);
     });
     connect(_vconnection,  &VirtualConnection::disconnected, this, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
-
-    QSettings settings;
-    _autoConnect = settings.value("autoConnect", false).toBool();
-    if(_autoConnect)
-    {
-        QString server = settings.value("lastServer", "").toString();
-        if(!server.isEmpty())
-        {
-            setServer(server);
-        }
-    }
+    if(QHSettings::instance()->ready())
+        loadSettings();
+    else
+        connect(QHSettings::instance(), &QHSettings::readyChanged, this, &ConnectionManager::loadSettings);
 }
 
 ConnectionManager::~ConnectionManager()
@@ -51,8 +43,7 @@ void ConnectionManager::setAutoConnect(bool newAutoConnect)
     if (_autoConnect == newAutoConnect)
         return;
 
-    QSettings settings;
-    settings.setValue("autoConnect", newAutoConnect);
+    QHSettings::instance()->setValue("autoConnect", newAutoConnect);
 
     _autoConnect = newAutoConnect;
     emit autoConnectChanged();
@@ -118,6 +109,20 @@ void ConnectionManager::socketError(QAbstractSocket::SocketError error)
     if(error == QAbstractSocket::NetworkError)
     {
         _connection->connect(_server);
+    }
+}
+
+void ConnectionManager::loadSettings()
+{
+    QHSettings* settings = QHSettings::instance();
+    _autoConnect = settings->value("autoConnect", false).toBool();
+    if(_autoConnect)
+    {
+        QString server = settings->value("lastServer", "").toString();
+        if(!server.isEmpty())
+        {
+            setServer(server);
+        }
     }
 }
 

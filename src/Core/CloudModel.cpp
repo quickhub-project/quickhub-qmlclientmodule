@@ -12,7 +12,7 @@
 #include <QJsonDocument>
 #include <QJSEngine>
 #include <QCoreApplication>
-#include <QSettings>
+#include "Helpers/QHSettings.h"
 #include <QWebSocket>
 
 
@@ -20,28 +20,31 @@ CloudModel* CloudModel::_instance = nullptr;
 
 CloudModel::CloudModel(QObject *parent) : QObject(parent)
 {
-    loadSettings();
     _connectionManager = ConnectionManager::instance();
     _connection = _connectionManager->getConnection();
     _vconnection = _connectionManager->getVConnection();
+    if(QHSettings::instance()->ready())
+        loadSettings();
+    else
+        connect(QHSettings::instance(), &QHSettings::readyChanged, this, &CloudModel::loadSettings);
     connect(_vconnection, &VirtualConnection::messageReceived, this, &CloudModel::messageReceived);
     connect(_vconnection, &VirtualConnection::connected, this, &CloudModel::socketConnected);
 }
 
 void CloudModel::loadSettings()
 {
-    QSettings settings;
-    int size = settings.beginReadArray("logins");
+    QHSettings* settings = QHSettings::instance();
+    int size = settings->beginReadArray("logins");
     for (int i = 0; i < size; ++i)
     {
-        settings.setArrayIndex(i);
+        settings->setArrayIndex(i);
         QVariantMap login;
-        login["userName"] = settings.value("userName").toString();
-        login["password"] = settings.value("password").toString();
-        _lastLogins [settings.value("server").toString()] = login;
+        login["userName"] = settings->value("userName").toString();
+        login["password"] = settings->value("password").toString();
+        _lastLogins [settings->value("server").toString()] = login;
     }
-    settings.endArray();
-    _autoLogin = settings.value("autoLogin", false).toBool();
+    settings->endArray();
+    _autoLogin = settings->value("autoLogin", false).toBool();
      Q_EMIT autoLoginChanged();
 }
 
@@ -49,19 +52,19 @@ void CloudModel::addLogin(const QVariantMap &login)
 {
     QString server = _connectionManager->getServer();
     _lastLogins.insert(server, login);
-    QSettings settings;
-    settings.beginWriteArray("logins");
+    QHSettings* settings = QHSettings::instance();
+    settings->beginWriteArray("logins");
     QMapIterator<QString, QVariantMap> it(_lastLogins);
     int i = 0;
     while(it.hasNext())
     {
         it.next();
-        settings.setArrayIndex(i++);
-        settings.setValue("userName", it.value()["userName"].toString());
-        settings.setValue("password", it.value()["password"].toString());
-        settings.setValue("server", it.key());
+        settings->setArrayIndex(i++);
+        settings->setValue("userName", it.value()["userName"].toString());
+        settings->setValue("password", it.value()["password"].toString());
+        settings->setValue("server", it.key());
     }
-    settings.endArray();
+    settings->endArray();
 }
 
 bool CloudModel::autoLogin() const
@@ -75,8 +78,7 @@ void CloudModel::setAutoLogin(bool newAutoLogin)
         return;
 
     _autoLogin = newAutoLogin;
-    QSettings settings;
-    settings.setValue("autoLogin", _autoLogin);
+    QHSettings::instance()->setValue("autoLogin", _autoLogin);
 
     emit autoLoginChanged();
 }

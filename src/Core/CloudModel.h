@@ -213,7 +213,7 @@ public:
 
 private:
     explicit CloudModel(QObject *parent = nullptr);
-    void loadSettings();
+
     void addLogin(const QVariantMap& login);
     Connection*         _connection;
     ConnectionManager*   _connectionManager;
@@ -241,7 +241,7 @@ signals:
 private slots:
     void socketConnected();
     void messageReceived(const QVariant& data);
-
+    void loadSettings();
 
 public slots:
 };

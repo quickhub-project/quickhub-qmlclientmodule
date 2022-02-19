@@ -1,3 +1,0 @@
-[submodule "src/Helpers/QWasmSettings"]
-	path = src/Helpers/QWasmSettings
-	url = https://github.com/Skycoder42/QWasmSettings.git
