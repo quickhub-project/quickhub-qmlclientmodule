@@ -5,6 +5,7 @@
 # Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de
 
 QT += websockets widgets
+include( src/Helpers/QWasmSettings/qwasmsettings.pri)
 
 SOURCES += \
     $$PWD/src/Core/CloudModel.cpp \
