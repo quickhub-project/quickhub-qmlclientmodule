@@ -44,6 +44,7 @@ void ConnectionManager::setAutoConnect(bool newAutoConnect)
         return;
 
     QHSettings::instance()->setValue("autoConnect", newAutoConnect);
+    QHSettings::instance()->sync();
 
     _autoConnect = newAutoConnect;
     emit autoConnectChanged();

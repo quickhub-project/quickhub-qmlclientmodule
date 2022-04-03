@@ -175,6 +175,7 @@ bool Device::connected() const
 void Device::propertyDataChanged(const QString &key, const QVariant &input)
 {
     _settings->setValue("Devices/"+uuid()+"/"+key, input);
+    _settings->sync();
    Q_EMIT propertyUpdate(key, input);
 
    if(!_connected)
@@ -316,6 +317,7 @@ void Device::messageReceived(QVariant message)
    {
        quint32 key = msg["params"].toUInt();
        _settings->setValue("Devices/"+uuid()+"_key", key);
+       _settings->sync();
    }
 }
 
