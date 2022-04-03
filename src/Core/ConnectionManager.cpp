@@ -79,9 +79,6 @@ QString ConnectionManager::getServer() const
 
 void ConnectionManager::setServer(const QString &server)
 {
-    if(_server == server)
-        return;
-
     connectToServer(server);
 }
 
@@ -116,9 +113,11 @@ void ConnectionManager::loadSettings()
 {
     QHSettings* settings = QHSettings::instance();
     _autoConnect = settings->value("autoConnect", false).toBool();
+    qDebug()<< "AutoConnect is " << (_autoConnect ? "enabled": "disabled");
     if(_autoConnect)
     {
         QString server = settings->value("lastServer", "").toString();
+        qDebug()<< "Try auto-connect to " << server;
         if(!server.isEmpty())
         {
             setServer(server);
