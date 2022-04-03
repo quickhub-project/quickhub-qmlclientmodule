@@ -10,7 +10,7 @@
 #include <QQmlEngine>
 #include <QDebug>
 #include <QQmlContext>
-
+#include <QTimer>
 
 Device::Device(QObject *parent) : QQmlPropertyMap(this, parent)
 {
@@ -22,9 +22,17 @@ Device::Device(QObject *parent) : QQmlPropertyMap(this, parent)
     if(_conn->getConnectionState() == VirtualConnection::CONNECTED)
     {
         if(_settings->ready())
-            initDevice();
+            // post to eventloop to not bypass virtual behavior from implementations of subclasses
+            QTimer::singleShot(0, this, &Device::connectedSlot);
         else
-            connect(_settings, &QHSettings::readyChanged, [=](){initDevice();});
+        {
+            auto conn = std::make_shared<QMetaObject::Connection>();
+            *conn = connect(_settings, &QHSettings::readyChanged, this, [this, conn]()
+            {
+                connectedSlot();
+                QObject::disconnect(*conn);
+            });
+        }
     }
 }
 

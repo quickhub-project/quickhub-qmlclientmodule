@@ -225,13 +225,13 @@ protected:
         if(_conn->getConnectionState() == VirtualConnection::CONNECTED)
         {
             if(_settings->ready())
-                initDevice();
+                QTimer::singleShot(0, this, &Device::connectedSlot);
             else
             {
                 auto conn = std::make_shared<QMetaObject::Connection>();
-                *conn = connect(_settings, &QHSettings::readyChanged, [this, conn]()
+                *conn = connect(_settings, &QHSettings::readyChanged, this, [this, conn]()
                 {
-                    initDevice();
+                    connectedSlot();
                     QObject::disconnect(*conn);
                 });
             }

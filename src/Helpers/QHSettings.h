@@ -18,7 +18,7 @@ public:
 
 private:
     void setReady(bool newReady);
-    bool _ready;
+    bool _ready = false;
 
 signals:
     void readyChanged();
