@@ -12,8 +12,8 @@ QHSettings::QHSettings(QObject *parent)
     *testSettingsReady = [=](){
         if (this->status() == QSettings::NoError) {
             delete testSettingsReady;
-            setReady(true);
             qDebug()<<"QSettings is ready.";
+            setReady(true);
         } else {
             QTimer::singleShot(10, *testSettingsReady);
         }
