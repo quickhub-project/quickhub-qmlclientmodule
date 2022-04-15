@@ -73,7 +73,7 @@ Q_INVOKABLE void SynchronizedObjectModel::setProperty(QString key, QVariant valu
     Q_EMIT keysChanged();
 }
 
-void SynchronizedObjectModel::setProperty(QString key, QVariant value, QJSValue callback)
+void SynchronizedObjectModel::setPropertyWithCallback(QString key, QVariant value, QJSValue callback)
 {
     if(callback.isCallable())
         _callbacks.insert(key, callback);

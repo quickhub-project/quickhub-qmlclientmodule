@@ -97,7 +97,7 @@ public:
         specify a JS callback that will be called on success or failure.
     */
     Q_INVOKABLE void setProperty(QString key, QVariant value);
-    Q_INVOKABLE void setProperty(QString key, QVariant value, QJSValue callback);
+    Q_INVOKABLE void setPropertyWithCallback(QString key, QVariant value, QJSValue callback);
 
     // property getter & setter
     QString resource() const;
