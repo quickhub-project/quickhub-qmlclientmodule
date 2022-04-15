@@ -230,7 +230,6 @@ void CloudModel::logout()
     }
 }
 
-
 void CloudModel::setupTunnel(QString server, QJSValue callback)
 {
     _setupTunnelCb = callback;
