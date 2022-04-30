@@ -12,6 +12,7 @@ SOURCES += \
     $$PWD/src/Core/ListModelBase.cpp \
 #    $$PWD/src/Helpers/FileUploader.cpp \
     $$PWD/src/Core/StandaloneDevice.cpp \
+    $$PWD/src/Helpers/QHSettings.cpp \
     $$PWD/src/Helpers/RoleFilter.cpp \
     $$PWD/src/Models/DeviceLogic.cpp \
     $$PWD/src/Models/DeviceLogicProperty.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     $$PWD/src/Core/ListModelBase.h \
  #   $$PWD/src/Helpers/FileUploader.h \
     $$PWD/src/Core/StandaloneDevice.h \
+    $$PWD/src/Helpers/QHSettings.h \
     $$PWD/src/Helpers/RoleFilter.h \
     $$PWD/src/InitQuickHub.h \
     $$PWD/src/Models/DeviceLogic.h \

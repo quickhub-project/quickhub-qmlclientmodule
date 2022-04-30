@@ -27,10 +27,8 @@
 #include "StandaloneDevice.h"
 //#include "FileUploader.h"
 #include <qqml.h>
-
 class InitQuickHub
 {
-
 public:
     static void registerTypes(const char *uri)
     {

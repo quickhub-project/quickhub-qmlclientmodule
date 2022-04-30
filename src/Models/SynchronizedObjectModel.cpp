@@ -59,7 +59,7 @@ bool SynchronizedObjectModel::initialized() const
     return _initialized;
 }
 
-void SynchronizedObjectModel::setProperty(QString key, QVariant value)
+Q_INVOKABLE void SynchronizedObjectModel::setProperty(QString key, QVariant value)
 {
     QVariantMap msg;
     msg["command"] = "object:property:set";
@@ -71,6 +71,14 @@ void SynchronizedObjectModel::setProperty(QString key, QVariant value)
     this->insert(key, value);
     _keys << key;
     Q_EMIT keysChanged();
+}
+
+void SynchronizedObjectModel::setPropertyWithCallback(QString key, QVariant value, QJSValue callback)
+{
+    if(callback.isCallable())
+        _callbacks.insert(key, callback);
+
+    setProperty(key, value);
 }
 
 ResourceCommunicationHandler::ModelState SynchronizedObjectModel::getModelState() const
@@ -123,16 +131,14 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
 {
     QVariantMap msg = message.toMap();
     QString cmd = msg["command"].toString();
-
     QVariantMap parameters = msg["parameters"].toMap();
-    QVariant data = parameters["data"];
 
     if(cmd == "object:dump")
     {
+        QVariant data = parameters["data"];
         QVariantMap parameters = msg["parameters"].toMap();
-        QVariantMap map = parameters["data"].toMap();
         _metadata = parameters["metadata"].toMap();
-        QMapIterator<QString, QVariant> it(map);
+        QMapIterator<QString, QVariant> it(data.toMap());
 
         while(it.hasNext())
         {
@@ -158,6 +164,23 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
         _keys << key;
         this->insert(key, value);
         Q_EMIT keysChanged();
+        return;
+    }
+
+    if(cmd == "object:property:set:failed" || cmd == "object:property:set:success")
+    {
+        QString key = parameters["property"].toString();
+        QString errString = msg["errorstring"].toString();
+        QString errCode = msg["errorcode"].toString();
+
+        if(_callbacks.contains(key))
+        {
+            auto cb = _callbacks.value(key);
+            if(cb.isCallable())
+            {
+                cb.call(QJSValueList { errCode, errString });
+            }
+        }
     }
 }
 

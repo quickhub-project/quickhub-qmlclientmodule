@@ -38,9 +38,9 @@ class CloudModel : public QObject
         \qmlproperty bool CloudModel::autoLogIn
         If this property is true, the client remembers the login credentials (user and password) for a successful login.
         The next time the client tries to connect to the same server, a login with these credentials will be tried.
-        \default true
+        \default false
     */
-    Q_PROPERTY(bool autoLogIn MEMBER _autoLogin NOTIFY autoLoginChanged)
+    Q_PROPERTY(bool autoLogIn READ autoLogin WRITE setAutoLogin NOTIFY autoLoginChanged)
 
     /*!
         \qmlproperty QString ConnectionState::errorString
@@ -95,7 +95,7 @@ public:
         errorcode, in case success == false.
         \sa CloudModel::ErrorCodes
     */
-    Q_INVOKABLE void login(QString user, QString password, QJSValue callback = QJSValue(), bool remember = false);
+    Q_INVOKABLE void login(QString user, QString password, QJSValue callback = QJSValue(), bool rememberLogin = false);
 
 
     /*!
@@ -208,9 +208,12 @@ public:
     QString getUserID() const;
     QVariantMap getCurrentUser() const;
 
+    bool autoLogin() const;
+    void setAutoLogin(bool newAutoLogin);
+
 private:
     explicit CloudModel(QObject *parent = nullptr);
-    void loadLogins();
+
     void addLogin(const QVariantMap& login);
     Connection*         _connection;
     ConnectionManager*   _connectionManager;
@@ -238,7 +241,7 @@ signals:
 private slots:
     void socketConnected();
     void messageReceived(const QVariant& data);
-
+    void loadSettings();
 
 public slots:
 };
