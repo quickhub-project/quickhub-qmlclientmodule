@@ -198,6 +198,8 @@ public:
     */
     Q_INVOKABLE void logout();
 
+    Q_INVOKABLE void init();
+
 
 //  Q_INVOKABLE void connectToHub(QString server, QJSValue callback);
 
