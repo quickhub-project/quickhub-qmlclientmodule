@@ -143,6 +143,7 @@ signals:
     void metadataChanged();
     void initializedChanged();
     void filterChanged();
+    void eventReceived(QVariantMap data);
 
 private slots:
     void messageReceived(QVariant message);

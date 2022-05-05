@@ -159,6 +159,13 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
         this->insert(key, value);
         Q_EMIT keysChanged();
     }
+
+    if(cmd == "object:event")
+    {
+        Q_EMIT eventReceived(parameters["data"].toMap());
+        return;
+    }
+
 }
 
 void SynchronizedObjectModel::resetProperties()
