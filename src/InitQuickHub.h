@@ -40,7 +40,7 @@ public:
         qmlRegisterType<ImageCollectionModel>(uri, 1, 0, "ImageCollectionModel");
         qmlRegisterType<UserListModel>(uri, 1, 0, "UserListModel");
         qmlRegisterType<RoleFilter>(uri, 1, 0, "RoleFilter");
-        qmlRegisterType<AutomationRule>(uri, 1, 0, "AutomationRule");
+        //qmlRegisterType<AutomationRule>(uri, 1, 0, "AutomationRule");
         qmlRegisterType<DeviceListModel>(uri, 1, 0, "DeviceListModel");
         qmlRegisterType<DeviceHandleListModel>(uri, 1, 0, "DeviceHandleListModel");
         qmlRegisterType<DeviceHandleTreeModel>(uri, 1, 0, "DeviceHandleTreeModel");
