@@ -8,6 +8,8 @@ Q_GLOBAL_STATIC(QHSettings, qhSettings);
 QHSettings::QHSettings(QObject *parent)
     : QSettings{parent}
 {
+
+#ifdef WEB_ASSEMBLY
     std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
     *testSettingsReady = [=](){
         if (this->status() == QSettings::NoError) {
@@ -19,6 +21,9 @@ QHSettings::QHSettings(QObject *parent)
         }
     };
     (*testSettingsReady)();
+#else
+setReady(true);
+#endif
 }
 
 QHSettings *QHSettings::instance()
