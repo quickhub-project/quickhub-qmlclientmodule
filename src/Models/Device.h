@@ -12,7 +12,7 @@
 #include <QQmlPropertyMap>
 #include <QWebSocket>
 #include "QHSettings.h"
-
+#include <memory>
 #include "../Shared/VirtualConnection.h"
 
 /*!
