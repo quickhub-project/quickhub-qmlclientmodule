@@ -10,25 +10,35 @@
 #include <QQmlEngine>
 #include <QDebug>
 #include <QQmlContext>
-
-
+#include <QTimer>
 
 Device::Device(QObject *parent) : QQmlPropertyMap(this, parent)
 {
+    _settings = QHSettings::instance();
     _conn = new VirtualConnection(ConnectionManager::instance()->getConnection());
     connect(_conn, &VirtualConnection::connected, this, &Device::connectedSlot);
     connect(_conn, &VirtualConnection::disconnected, this, &Device::disconnectedSlot);
     connect(_conn, &VirtualConnection::messageReceived, this, &Device::messageReceived);
     if(_conn->getConnectionState() == VirtualConnection::CONNECTED)
     {
-        initDevice();
+        if(_settings->ready())
+            // post to eventloop to not bypass virtual behavior from implementations of subclasses
+            QTimer::singleShot(0, this, &Device::connectedSlot);
+        else
+        {
+            auto conn = std::make_shared<QMetaObject::Connection>();
+            *conn = connect(_settings, &QHSettings::readyChanged, this, [this, conn]()
+            {
+                connectedSlot();
+                QObject::disconnect(*conn);
+            });
+        }
     }
-
 }
 
 Device::~Device()
 {
-    _settings.sync();
+    _settings->sync();
 }
 
 void Device::registerFunction(QString name, QJSValue callback)
@@ -49,7 +59,7 @@ void Device::registerPropertyWithInitValue(QString name,  QJSValue callback, QVa
     if(callback.isCallable())
     {
         _functions.insert(setterName, callback);
-        QVariant loadedVal= _settings.value("Devices/"+uuid()+"/"+name);
+        QVariant loadedVal= _settings->value("Devices/"+uuid()+"/"+name);
 
         if(!loadedVal.isValid() && init.isValid())
         {
@@ -81,7 +91,7 @@ void Device::registerProperty(QString name, QJSValue callback, QVariant value)
         }
         else
         {
-            QVariant loadedVal= _settings.value("Devices/"+uuid()+"/"+name);
+            QVariant loadedVal= _settings->value("Devices/"+uuid()+"/"+name);
             QVariantMap data;
             data["val"] = loadedVal;
             QQmlEngine* engine = QQmlEngine::contextForObject(this)->engine();
@@ -121,7 +131,7 @@ void Device::start()
     {
         _readyForInit = true;
     }
-    _settings.sync();
+    _settings->sync();
 }
 
 QString Device::uuid() const
@@ -164,7 +174,8 @@ bool Device::connected() const
 
 void Device::propertyDataChanged(const QString &key, const QVariant &input)
 {
-    _settings.setValue("Devices/"+uuid()+"/"+key, input);
+    _settings->setValue("Devices/"+uuid()+"/"+key, input);
+    _settings->sync();
    Q_EMIT propertyUpdate(key, input);
 
    if(!_connected)
@@ -238,7 +249,7 @@ void Device::initDevice(QVariantMap parameters)
 
 
     parameters["type"] = _type;
-    parameters["key"] = _settings.value("Devices/"+uuid()+"_key", 0).toUInt();
+    parameters["key"] = _settings->value("Devices/"+uuid()+"_key", 0).toUInt();
     msg["parameters"] = parameters;
 
     _conn->sendVariant(msg);
@@ -305,7 +316,8 @@ void Device::messageReceived(QVariant message)
    if(command == "setkey")
    {
        quint32 key = msg["params"].toUInt();
-       _settings.setValue("Devices/"+uuid()+"_key", key);
+       _settings->setValue("Devices/"+uuid()+"_key", key);
+       _settings->sync();
    }
 }
 

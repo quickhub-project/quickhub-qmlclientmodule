@@ -12,6 +12,7 @@ SOURCES += \
     $$PWD/src/Core/ListModelBase.cpp \
 #    $$PWD/src/Helpers/FileUploader.cpp \
     $$PWD/src/Core/StandaloneDevice.cpp \
+    $$PWD/src/Helpers/QHSettings.cpp \
     $$PWD/src/Helpers/RoleFilter.cpp \
     $$PWD/src/Models/DeviceLogic.cpp \
     $$PWD/src/Models/DeviceLogicProperty.cpp \
@@ -30,7 +31,7 @@ SOURCES += \
     $$PWD/src/Models/SynchronizedListModel2.cpp \
     $$PWD/src/Models/Device.cpp \
     $$PWD/src/Models/DevicePropertyModel.cpp \
-    $$PWD/src/Helpers/AutomationRule.cpp \
+ #   $$PWD/src/Helpers/AutomationRule.cpp \
     $$PWD/src/Models/DeviceHandleTreeModel.cpp \
     $$PWD/src/Models/TreeItem.cpp \
     $$PWD/src/Models/ImageCollectionModel.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     $$PWD/src/Core/ListModelBase.h \
  #   $$PWD/src/Helpers/FileUploader.h \
     $$PWD/src/Core/StandaloneDevice.h \
+    $$PWD/src/Helpers/QHSettings.h \
     $$PWD/src/Helpers/RoleFilter.h \
     $$PWD/src/InitQuickHub.h \
     $$PWD/src/Models/DeviceLogic.h \
@@ -65,7 +67,7 @@ HEADERS += \
     $$PWD/src/Models/SynchronizedListModel2.h \
     $$PWD/src/Models/Device.h \
     $$PWD/src/Models/DevicePropertyModel.h \
-    $$PWD/src/Helpers/AutomationRule.h \
+  #  $$PWD/src/Helpers/AutomationRule.h \
     $$PWD/src/Models/DeviceHandleTreeModel.h \
     $$PWD/src/Models/TreeItem.h \
     $$PWD/src/Models/ImageCollectionModel.h \

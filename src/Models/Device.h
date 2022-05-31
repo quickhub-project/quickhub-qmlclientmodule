@@ -11,7 +11,7 @@
 #include <QJSValue>
 #include <QQmlPropertyMap>
 #include <QWebSocket>
-#include <QSettings>
+#include "QHSettings.h"
 
 #include "../Shared/VirtualConnection.h"
 
@@ -218,12 +218,23 @@ protected:
         : QQmlPropertyMap(derived, parent)
     {
         _conn = vconnection;
+        _settings = QHSettings::instance();
         connect(_conn, &VirtualConnection::connected, this, &Device::connectedSlot);
         connect(_conn, &VirtualConnection::disconnected, this, &Device::disconnectedSlot);
         connect(_conn, &VirtualConnection::messageReceived, this, &Device::messageReceived);
         if(_conn->getConnectionState() == VirtualConnection::CONNECTED)
         {
-            initDevice();
+            if(_settings->ready())
+                QTimer::singleShot(0, this, &Device::connectedSlot);
+            else
+            {
+                auto conn = std::make_shared<QMetaObject::Connection>();
+                *conn = connect(_settings, &QHSettings::readyChanged, this, [this, conn]()
+                {
+                    connectedSlot();
+                    QObject::disconnect(*conn);
+                });
+            }
         }
     }
 
@@ -233,7 +244,7 @@ protected:
 private:
     // the cache stores property changes while device is still initializing
     QVariantMap             _tempCache;
-    QSettings               _settings;
+    QHSettings*               _settings;
     bool                    _connected = false;
     VirtualConnection*      _conn;
     QMap<QString, QJSValue> _functions;

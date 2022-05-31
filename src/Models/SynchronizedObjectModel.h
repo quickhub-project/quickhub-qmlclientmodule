@@ -93,9 +93,11 @@ public:
 
     /*!
         \fn void SynchronizedObjectModel::setProperty(QString key, QVariant value)
-        Sets the property with the corresponding key to the given value
+        Sets the property with the corresponding key to the given value. You can
+        specify a JS callback that will be called on success or failure.
     */
     Q_INVOKABLE void setProperty(QString key, QVariant value);
+    Q_INVOKABLE void setPropertyWithCallback(QString key, QVariant value, QJSValue callback);
 
     // property getter & setter
     QString resource() const;
@@ -134,6 +136,7 @@ private:
     bool                            _shared;
     bool                            _initialized = false;
     QVariantMap                     _filter;
+    QMap<QString, QJSValue>         _callbacks;
 
 signals:
     void keysChanged();
@@ -143,6 +146,7 @@ signals:
     void metadataChanged();
     void initializedChanged();
     void filterChanged();
+    void eventReceived(QVariantMap data);
 
 private slots:
     void messageReceived(QVariant message);

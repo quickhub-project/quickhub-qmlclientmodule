@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "ConnectionManager.h"
-
+#include "Helpers/QHSettings.h"
 
 ConnectionManager* ConnectionManager::_instance = nullptr;
 
@@ -18,12 +18,36 @@ ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
     connect(_connection, &Connection::socketError, this, &ConnectionManager::socketError);
 
     _vconnection = new VirtualConnection(_connection);
-    connect(_vconnection, &VirtualConnection::connected, this, [=](){ setConnectionState(ConnectionManager::STATE_Connected);});
+    connect(_vconnection, &VirtualConnection::connected, this, [=](){
+        QHSettings::instance()->setValue("lastServer", _server);
+        setConnectionState(ConnectionManager::STATE_Connected);
+    });
     connect(_vconnection,  &VirtualConnection::disconnected, this, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
+    if(QHSettings::instance()->ready())
+        loadSettings();
+    else
+        connect(QHSettings::instance(), &QHSettings::readyChanged, this, &ConnectionManager::loadSettings);
 }
 
 ConnectionManager::~ConnectionManager()
 {
+}
+
+bool ConnectionManager::autoConnect() const
+{
+    return _autoConnect;
+}
+
+void ConnectionManager::setAutoConnect(bool newAutoConnect)
+{
+    if (_autoConnect == newAutoConnect)
+        return;
+
+    QHSettings::instance()->setValue("autoConnect", newAutoConnect);
+    QHSettings::instance()->sync();
+
+    _autoConnect = newAutoConnect;
+    emit autoConnectChanged();
 }
 
 void ConnectionManager::setConnectionState(const State &connectionState)
@@ -56,9 +80,6 @@ QString ConnectionManager::getServer() const
 
 void ConnectionManager::setServer(const QString &server)
 {
-    if(_server == server)
-        return;
-
     connectToServer(server);
 }
 
@@ -83,9 +104,27 @@ void ConnectionManager::socketError(QAbstractSocket::SocketError error)
     if(_connectCb.isCallable())
         _connectCb.call(QJSValueList { false, error });
 
+    qWarning()<<error;
     if(error == QAbstractSocket::NetworkError)
     {
-        _connection->connect(_server);
+       // this has caused a crash on iOS
+       // _connection->connect(_server);
+    }
+}
+
+void ConnectionManager::loadSettings()
+{
+    QHSettings* settings = QHSettings::instance();
+    _autoConnect = settings->value("autoConnect", false).toBool();
+    qDebug()<< "AutoConnect is " << (_autoConnect ? "enabled": "disabled");
+    if(_autoConnect)
+    {
+        QString server = settings->value("lastServer", "").toString();
+        qDebug()<< "Try auto-connect to " << server;
+        if(!server.isEmpty())
+        {
+            setServer(server);
+        }
     }
 }
 
