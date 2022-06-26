@@ -104,9 +104,11 @@ void ConnectionManager::socketError(QAbstractSocket::SocketError error)
     if(_connectCb.isCallable())
         _connectCb.call(QJSValueList { false, error });
 
+    qWarning()<<error;
     if(error == QAbstractSocket::NetworkError)
     {
-        _connection->connect(_server);
+       // this has caused a crash on iOS
+       // _connection->connect(_server);
     }
 }
 
