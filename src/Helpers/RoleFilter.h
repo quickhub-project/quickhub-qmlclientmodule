@@ -65,7 +65,7 @@ private:
     QString _numericFilterRoleName;
     double  _numericFilterThreshold;
     QString _booleanSortRoleName;
-    bool    _inverse;
+    bool    _inverse = false;
 
 private slots:
 
