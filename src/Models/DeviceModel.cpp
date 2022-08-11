@@ -153,6 +153,7 @@ bool DeviceModel::getInitialized() const
     return _initialized;
 }
 
+
 void DeviceModel::checkIfPropertiesAreEditable()
 {
     QListIterator<QVariant> it(_functions);
@@ -161,7 +162,11 @@ void DeviceModel::checkIfPropertiesAreEditable()
         QString funcName = it.next().toMap()["name"].toString();
         if(funcName.startsWith("set"))
         {
-            funcName = funcName.remove(0,3).toLower();
+
+            funcName = funcName.remove(0,3);
+            QChar first = funcName.at(0).toLower();
+            funcName = funcName.remove(0,1);
+            funcName.push_front(first);
             if(_properties.contains(funcName))
             {
 
