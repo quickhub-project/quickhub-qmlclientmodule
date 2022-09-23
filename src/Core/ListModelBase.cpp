@@ -114,6 +114,8 @@ bool ListModelBase<ItemType>::removeRows(int row, int count, const QModelIndex &
 template <class ItemType>
 ItemType ListModelBase<ItemType>::takeRow(int row)
 {
+    if(row < 0 || row >= m_dataList.count())
+        return ItemType();
     beginRemoveRows(QModelIndex(),row,row);
     auto item = m_dataList.takeAt(row);
     endRemoveRows();
