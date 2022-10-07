@@ -59,9 +59,31 @@ bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_pare
                while(itemIt.hasNext())
                {
                    QString item = itemIt.next();
-                   if(item.contains(_searchString, Qt::CaseInsensitive))
-                       return true;
+                   if(_findOnlyDirectMatches)
+                   {
+                       if(item == _searchString)
+                           return true;
+                   }
+                   else
+                   {
+                       if(item.contains(_searchString, Qt::CaseInsensitive))
+                           return true;
+                   }
                }
+            }
+            else if(data.canConvert(QMetaType::QString))
+            {
+                QString item = data.toString();
+                if(_findOnlyDirectMatches)
+                {
+                    if(item == _searchString)
+                        return true;
+                }
+                else
+                {
+                    if(item.contains(_searchString, Qt::CaseInsensitive))
+                        return true;
+                }
             }
         }
         return false;
@@ -239,5 +261,18 @@ void RoleFilter::setNumericFilterThreshold(double numericFilterValue)
     invalidateFilter();
     _numericFilterThreshold = numericFilterValue;
     Q_EMIT numericFilterThresholdChanged();
+}
+
+bool RoleFilter::findOnlyDirectMatches() const
+{
+    return _findOnlyDirectMatches;
+}
+
+void RoleFilter::setFindOnlyDirectMatches(bool newFindOnlyDirectMatches)
+{
+    if (_findOnlyDirectMatches == newFindOnlyDirectMatches)
+        return;
+    _findOnlyDirectMatches = newFindOnlyDirectMatches;
+    emit findOnlyDirectMatchesChanged();
 }
 

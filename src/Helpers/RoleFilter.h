@@ -22,6 +22,7 @@ class RoleFilter : public QSortFilterProxyModel
     Q_PROPERTY(QString sortRoleString READ sortRoleString WRITE setSortRoleString NOTIFY sortRoleStringChanged)
     Q_PROPERTY(double numericFilterThreshold READ getNumericFilterThreshold WRITE setNumericFilterThreshold NOTIFY numericFilterThresholdChanged)
     Q_PROPERTY(bool inverse READ inverse WRITE setInverse NOTIFY inverseChanged)
+    Q_PROPERTY(bool findOnlyDirectMatches READ findOnlyDirectMatches WRITE setFindOnlyDirectMatches NOTIFY findOnlyDirectMatchesChanged)
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
 public:
@@ -57,6 +58,9 @@ public:
     double getNumericFilterThreshold() const;
     void setNumericFilterThreshold(double numericFilterValue);
 
+    bool findOnlyDirectMatches() const;
+    void setFindOnlyDirectMatches(bool newFindOnlyDirectMatches);
+
 private:
     QString _sortRoleString;
     QString _searchString;
@@ -66,9 +70,10 @@ private:
     double  _numericFilterThreshold;
     QString _booleanSortRoleName;
     bool    _inverse = false;
+    bool    _findOnlyDirectMatches = false;
+
 
 private slots:
-
 
 signals:
     void sortRoleStringChanged();
@@ -80,6 +85,7 @@ signals:
     void countChanged();
     void searchStringChanged();
     void numericFilterThresholdChanged();
+    void findOnlyDirectMatchesChanged();
 
 public slots:
 };
