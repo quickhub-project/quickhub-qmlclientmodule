@@ -42,7 +42,6 @@ void SynchronizedObjectListModel::itemRemoved(int index)
 
     QString key = _keyList.at(index);
     _keyList.removeAt(index);
-    Q_EMIT keysChanged();
 
     auto map = _map.value(key);
     if(!_keepDeletedItems)
@@ -60,13 +59,13 @@ void SynchronizedObjectListModel::itemRemoved(int index)
     }
 
     _map.remove(key);
+    Q_EMIT keysChanged();
     Q_EMIT sigItemRemoved(key);
 }
 
 void SynchronizedObjectListModel::listCleared()
 {
     _keyList.clear();
-    Q_EMIT keysChanged();
     QMapIterator<QString, QQmlPropertyMap*> mapIt(_map);
     while(mapIt.hasNext())
     {
@@ -75,6 +74,7 @@ void SynchronizedObjectListModel::listCleared()
         delete mapIt.value();
     }
     _map.clear();
+    Q_EMIT keysChanged();
 
 //    QMapIterator<QString, QQmlPropertyMap*> nullIt(mapIt);
 //    while(nullIt.hasNext())
@@ -265,7 +265,7 @@ void SynchronizedObjectListModel::itemsAppended(QVariantList items)
         _nullItems.remove(key);
     }
 
-     Q_EMIT keysChanged();
+    Q_EMIT keysChanged();
 }
 
 void SynchronizedObjectListModel::mapValueChanged(const QString &key, const QVariant &input)
