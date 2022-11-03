@@ -11,6 +11,7 @@ RoleFilter::RoleFilter(QObject *parent) : QSortFilterProxyModel(parent)
 {
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SIGNAL(countChanged()));
     connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SIGNAL(countChanged()));
+    connect(this, SIGNAL(modelReset()), this, SIGNAL(countChanged()));
 }
 
 bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
