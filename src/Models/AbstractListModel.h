@@ -15,12 +15,15 @@
 class AbstractListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool initialized READ initialized NOTIFY initializedChanged)
+
 
 public:
     virtual QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
     int rowCount(const QModelIndex &parent) const;
     Q_INVOKABLE QVariantList getListData();
+    bool initialized() const;
 
 protected:
     AbstractListModel(QObject* parent);
@@ -35,10 +38,12 @@ private slots:
 
 private:
     ResourceCommunicationHandler*   _communicationHandler;
+    bool                            _initialized = false;
 
 signals:
     void itemAdded(int idx, QVariantMap item);
     void itemRemoved(int idx, QVariantMap item);
+    void initializedChanged();
 };
 
 #endif // LISTMODEL_H
