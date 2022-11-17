@@ -79,6 +79,8 @@ void AbstractListModel::messageHandler(QVariant message)
         QVariantList list = parameters["data"].toList();
         beginResetModel();
         _listData = list;
+        _initialized = true;
+        Q_EMIT initializedChanged();
         endResetModel();
         return;
     }
@@ -137,3 +139,9 @@ void AbstractListModel::attachedChanged()
         endResetModel();
     }
 }
+
+bool AbstractListModel::initialized() const
+{
+    return _initialized;
+}
+
