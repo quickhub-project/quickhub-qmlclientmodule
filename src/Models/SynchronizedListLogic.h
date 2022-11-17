@@ -195,7 +195,7 @@ private:
     QVariantMap         _metadata;
     QString             _resource;
     QList<MetaInfo>     _metaInfo;
-    int                 _preloadCount = 50;
+    int                 _preloadCount = -1;
     int                 _remoteItemCount = -1 ;
     bool                _initialized = false;
 
