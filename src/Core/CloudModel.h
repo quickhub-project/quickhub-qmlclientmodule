@@ -198,6 +198,13 @@ public:
     */
     Q_INVOKABLE void logout();
 
+    /*!
+        \fn void CloudModel::setTemporaryAutoLogin()
+        Perform a one-time automatic login the next time a server connection is established.
+        This is especially used when reconnecting after device provisioning.
+    */
+    Q_INVOKABLE void setTemporaryAutoLogin();
+
     Q_INVOKABLE void init();
 
 
@@ -217,12 +224,14 @@ private:
     explicit CloudModel(QObject *parent = nullptr);
 
     void addLogin(const QVariantMap& login);
+    bool                _tempAutoLogin = false;
     Connection*         _connection;
     ConnectionManager*   _connectionManager;
     static CloudModel*  _instance;
     QVariantMap         _user;
     VirtualConnection*  _vconnection;
     QString             _errorString;
+    QString             _password;
     QString             _userID;
     QJSValue            _addUserCb;
     QJSValue            _setupTunnelCb;

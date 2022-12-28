@@ -101,6 +101,8 @@ QObject *CloudModel::instanceAsQObject(QQmlEngine *engine, QJSEngine *scriptEngi
 void CloudModel::login(QString user, QString password, QJSValue callback, bool rememberLogin)
 {
     _userID = user;
+    _password = password;
+
     if(rememberLogin)
     {
         QVariantMap login;
@@ -230,6 +232,11 @@ void CloudModel::logout()
     }
 }
 
+void CloudModel::setTemporaryAutoLogin()
+{
+    _tempAutoLogin = true;
+}
+
 void CloudModel::init()
 {
 }
@@ -248,9 +255,18 @@ void CloudModel::setupTunnel(QString server, QJSValue callback)
 void CloudModel::socketConnected()
 {
     QString server = _connectionManager->getServer();
+
+    if(!_user.isEmpty() && !_password.isEmpty() && _tempAutoLogin)
+    {
+        login(_userID, _password);
+        _tempAutoLogin = false;
+        return;
+    }
+
     if( _autoLogin && _lastLogins.contains(server))
     {
         login(_lastLogins[server]["userName"].toString(), _lastLogins[server]["password"].toString());
+        return;
     }
 }
 
