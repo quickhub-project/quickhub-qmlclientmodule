@@ -7,6 +7,7 @@
 
 #include "RoleFilter.h"
 #include <QDebug>
+#include <QDateTime>
 RoleFilter::RoleFilter(QObject *parent) : QSortFilterProxyModel(parent)
 {
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SIGNAL(countChanged()));
@@ -97,13 +98,20 @@ bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_pare
 
 bool RoleFilter::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
+    qDebug()<< _sortRoleString;
     if(!_sortRoleString.isEmpty())
     {
         int role = sourceModel()->roleNames().key(_sortRoleString.toLatin1());
         QVariant l = source_left.data(role);
         QVariant r = source_right.data(role);
 
-        if(l.canConvert<int>()){
+        if(l.canConvert<QDateTime>()){
+            if(_inverse)
+                return l.toDateTime() < r.toDateTime();
+            else
+                return r.toDateTime() < l.toDateTime();
+        }
+        else if(l.canConvert<int>()){
             if(_inverse)
                 return l.toInt() < r.toInt();
             else
@@ -121,7 +129,6 @@ bool RoleFilter::lessThan(const QModelIndex &source_left, const QModelIndex &sou
             else
                 return r.toString() < l.toString();
         }
-
     }
 
     if(!_booleanSortRoleName.isEmpty())
