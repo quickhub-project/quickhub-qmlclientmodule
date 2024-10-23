@@ -49,6 +49,21 @@ bool DeviceModel::hasProperty(QString name)
     return _properties.contains(name);
 }
 
+bool DeviceModel::hasFunction(QString name)
+{
+    QListIterator<QVariant> it(_functions);
+    while(it.hasNext())
+    {
+        QVariantMap next = it.next().toMap();
+        if (next["name"].toString() == name)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void DeviceModel::setJSProperty(QString name, QJSValue val)
 {
     sendVariant(name, val.toVariant());

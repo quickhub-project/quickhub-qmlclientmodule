@@ -113,6 +113,7 @@ public:
     Q_INVOKABLE bool triggerFunction(QString name, QVariantMap parameters);
     Q_INVOKABLE DevicePropertyModel* getProperty(QString name);
     Q_INVOKABLE bool hasProperty(QString name);
+    Q_INVOKABLE bool hasFunction(QString name);
     Q_INVOKABLE void setJSProperty(QString name, QJSValue val);
     QString resource() const;
     void setResource(const QString &resource);
