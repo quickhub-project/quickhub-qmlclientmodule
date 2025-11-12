@@ -64,12 +64,16 @@ bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_pare
                    if(_findOnlyDirectMatches)
                    {
                        if(item == _searchString)
+                       {
                            return true;
+                       }
                    }
                    else
                    {
                        if(item.contains(_searchString, Qt::CaseInsensitive))
+                       {
                            return true;
+                       }
                    }
                }
             }
