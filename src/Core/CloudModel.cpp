@@ -12,7 +12,7 @@
 #include <QJsonDocument>
 #include <QJSEngine>
 #include <QCoreApplication>
-#include "Helpers/QHSettings.h"
+#include "../Helpers/QHSettings.h"
 #include <QWebSocket>
 
 

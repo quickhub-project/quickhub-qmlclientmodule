@@ -1,6 +1,6 @@
-#include <QApplication>
+#include <QGuiApplication>
 #include "ConnectionManager.h"
-#include "Helpers/QHSettings.h"
+#include "../Helpers/QHSettings.h"
 
 ConnectionManager* ConnectionManager::_instance = nullptr;
 

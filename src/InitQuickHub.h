@@ -7,24 +7,23 @@
 #ifndef INITQuickHub_H
 #define INITQuickHub_H
 
-#include "SynchronizedListModel2.h"
-#include "SynchronizedObjectModel.h"
-#include "UserListModel.h"
-#include "AutomationRule.h"
-#include "RoleFilter.h"
-#include "CloudModel.h"
-#include "ResourceCommunicationHandler.h"
-#include "DeviceListModel.h"
-#include "DeviceHandleListModel.h"
-#include "DeviceModel.h"
-#include "Device.h"
-#include "DevicePropertyModel.h"
-#include "DeviceHandleTreeModel.h"
-#include "ImageCollectionModel.h"
-#include "ServiceModel.h"
-#include "SynchronizedObjectListModel.h"
-#include "FilteredDeviceModel.h"
-#include "StandaloneDevice.h"
+#include "Models/SynchronizedListModel2.h"
+#include "Models/SynchronizedObjectModel.h"
+#include "Models/UserListModel.h"
+#include "Helpers/RoleFilter.h"
+#include "Core/CloudModel.h"
+#include "Core/ResourceCommunicationHandler.h"
+#include "Models/DeviceListModel.h"
+#include "Models/DeviceHandleListModel.h"
+#include "Models/DeviceModel.h"
+#include "Models/Device.h"
+#include "Models/DevicePropertyModel.h"
+#include "Models/DeviceHandleTreeModel.h"
+#include "Models/ImageCollectionModel.h"
+#include "Models/ServiceModel.h"
+#include "Models/SynchronizedObjectListModel.h"
+#include "Models/FilteredDeviceModel.h"
+#include "Core/StandaloneDevice.h"
 //#include "FileUploader.h"
 #include <qqml.h>
 class InitQuickHub
@@ -40,7 +39,6 @@ public:
         qmlRegisterType<ImageCollectionModel>(uri, 1, 0, "ImageCollectionModel");
         qmlRegisterType<UserListModel>(uri, 1, 0, "UserListModel");
         qmlRegisterType<RoleFilter>(uri, 1, 0, "RoleFilter");
-        //qmlRegisterType<AutomationRule>(uri, 1, 0, "AutomationRule");
         qmlRegisterType<DeviceListModel>(uri, 1, 0, "DeviceListModel");
         qmlRegisterType<DeviceHandleListModel>(uri, 1, 0, "DeviceHandleListModel");
         qmlRegisterType<DeviceHandleTreeModel>(uri, 1, 0, "DeviceHandleTreeModel");

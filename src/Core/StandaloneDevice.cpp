@@ -1,6 +1,6 @@
 #include "StandaloneDevice.h"
 #include "ConnectionManager.h"
-#include <QApplication>
+#include <QGuiApplication>
 #include <QMetaObject>
 #include <QDebug>
 

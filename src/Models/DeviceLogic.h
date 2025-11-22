@@ -10,7 +10,7 @@
 #include "../Shared/VirtualConnection.h"
 #include <QObject>
 #include <QSettings>
-#include <DeviceLogicProperty.h>
+#include "DeviceLogicProperty.h"
 #include <QSharedPointer>
 
 typedef QSharedPointer<DeviceLogicProperty> devicePropertyPtr;

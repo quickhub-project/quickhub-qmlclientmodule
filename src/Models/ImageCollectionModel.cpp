@@ -5,7 +5,7 @@
  * Copyright (C) 2021 by Friedemann Metzger - mail@friedemann-metzger.de */
 
 #include "ImageCollectionModel.h"
-#include "CloudModel.h"
+#include "../Core/CloudModel.h"
 #include <QJsonDocument>
 #include <QUrlQuery>
 

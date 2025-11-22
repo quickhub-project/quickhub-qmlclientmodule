@@ -11,8 +11,8 @@
 #include <QJSValue>
 #include <QQmlPropertyMap>
 #include <QWebSocket>
-#include "QHSettings.h"
 #include <memory>
+#include "../Helpers/QHSettings.h"
 #include "../Shared/VirtualConnection.h"
 
 /*!
