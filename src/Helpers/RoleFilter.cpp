@@ -54,7 +54,7 @@ bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_pare
             int roleIndex = sourceModel()->roleNames().key(role.toLatin1());
 
             QVariant data = index.data(roleIndex);
-            if(data.canConvert(QMetaType::QStringList))
+            if(data.canConvert<QStringList>())
             {
                QStringList items = data.toStringList();
                QListIterator<QString> itemIt(items);
@@ -73,7 +73,7 @@ bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_pare
                    }
                }
             }
-            else if(data.canConvert(QMetaType::QString))
+            else if(data.canConvert<QString>())
             {
                 QString item = data.toString();
                 if(_findOnlyDirectMatches)

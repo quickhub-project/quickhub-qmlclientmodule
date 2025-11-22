@@ -40,7 +40,7 @@ class FilteredDeviceModel : public DeviceAdapterModel
         appear later as list entries. Since device-types are often
         specified similar to path names (e.g. sockets/230vSocket or
         sockets/400vSocket) wildcards can be used. For example
-        "sockets/*"
+        "sockets"
     */
     Q_PROPERTY(QStringList deviceType READ getDeviceType WRITE setDeviceType NOTIFY deviceTypeChanged)
 
