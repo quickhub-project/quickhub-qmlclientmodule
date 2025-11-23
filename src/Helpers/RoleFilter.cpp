@@ -98,7 +98,6 @@ bool RoleFilter::filterAcceptsRow(int source_row, const QModelIndex &source_pare
 
 bool RoleFilter::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
-    qDebug()<< _sortRoleString;
     if(!_sortRoleString.isEmpty())
     {
         int role = sourceModel()->roleNames().key(_sortRoleString.toLatin1());
