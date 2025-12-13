@@ -42,7 +42,7 @@ qt_add_qml_module(QuickHubClient
 )
 
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+if(EMSCRIPTEN)
     target_compile_definitions(QuickHubClient PRIVATE
         WEB_ASSEMBLY
     )

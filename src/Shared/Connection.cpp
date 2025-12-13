@@ -149,7 +149,7 @@ void Connection::messageReceived(QByteArray message)
    QVariantMap msg = QJsonDocument::fromJson(message, &error).toVariant().toMap();
    if(error.error != QJsonParseError::NoError)
    {
-       qDebug()<<"Connection: Inavlid Json.";
+       qDebug()<<"Connection: Inavlid Json:"<<message;
        return;
    }
 
