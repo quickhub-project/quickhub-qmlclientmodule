@@ -265,6 +265,11 @@ void Device::messageReceived(QVariant message)
     if(command == "call")
     {
         QVariantMap parameters = msg["params"].toMap();
+        if(parameters.isEmpty())
+        {
+            qWarning()<<Q_FUNC_INFO << " Received 'call' command without parameters.";
+            return;
+        }
         QString function = parameters.firstKey();
         if(_functions.contains(function))
         {
@@ -278,7 +283,7 @@ void Device::messageReceived(QVariant message)
                 QQmlEngine* engine = QQmlEngine::contextForObject(this)->engine();
                 if(!engine)
                 {
-                    qWarning()<<Q_FUNC_INFO << "No  JS-Engine!";
+                    qWarning()<<Q_FUNC_INFO << " No  JS-Engine!";
                     return;
                 }
                 QJSValue argJS = engine->toScriptValue<QVariantMap>(argVariant);
