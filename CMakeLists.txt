@@ -61,3 +61,10 @@ target_link_libraries(QuickHubClient PUBLIC
     Qt6::WebSockets
 
 )
+
+if(ANDROID)
+  add_link_options(
+    "LINKER:-z,max-page-size=16384"
+    "LINKER:-z,common-page-size=16384"
+  )
+endif()
