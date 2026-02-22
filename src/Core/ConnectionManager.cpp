@@ -53,6 +53,10 @@ void ConnectionManager::setAutoConnect(bool newAutoConnect)
 
 void ConnectionManager::setConnectionState(const State &connectionState)
 {
+    if(_connectionState == connectionState)
+    {
+        return;
+    }
     _connectionState = connectionState;
     Q_EMIT onStateChanged();
 }
@@ -90,8 +94,10 @@ void ConnectionManager::connectToServer(QString server, QJSValue callback)
         _connection->setSocket(new QWebSocket());
 
     _connectCb = callback;
-    if(_connection->isConnected())
+    if(_connection->isConnected() || _connectionState == STATE_Connecting)
+    {
         _connection->disconnect();
+    }
 
     _connectionState = STATE_Connecting;
     Q_EMIT onStateChanged();
