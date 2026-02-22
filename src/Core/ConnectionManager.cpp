@@ -21,6 +21,7 @@ ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
     connect(_vconnection, &VirtualConnection::connected, this, [=](){
         QHSettings::instance()->setValue("lastServer", _server);
         setConnectionState(ConnectionManager::STATE_Connected);
+        Q_EMIT successfullyConnected();
     });
     connect(_vconnection,  &VirtualConnection::disconnected, this, [=](){setConnectionState(ConnectionManager::STATE_Disconnected);});
     if(QHSettings::instance()->ready())

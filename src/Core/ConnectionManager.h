@@ -122,6 +122,7 @@ signals:
     void tokenChanged();
     void keepaliveIntervalChanged();
     void autoConnectChanged();
+    void successfullyConnected();
 };
 
 #endif // AUTHENTICATIONSTATE_H

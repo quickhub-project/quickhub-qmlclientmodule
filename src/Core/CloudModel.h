@@ -243,7 +243,7 @@ private:
     QMap<QString, QVariantMap>  _lastLogins;
 
 signals:
-    void connectedChanged();
+    void successfullyConnected();
     void tokenChanged();
     void onErrorStringChanged();
     void currentUserChanged();
