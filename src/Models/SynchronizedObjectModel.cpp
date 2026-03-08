@@ -99,6 +99,7 @@ void SynchronizedObjectModel::setFilter(const QVariantMap &filter)
     parameters[QStringLiteral("data")] = filter;
     msg[QStringLiteral("parameters")] = parameters;
     _communicationHandler->sendMessage(msg);
+    _filter = filter;
     Q_EMIT filterChanged();
 }
 
