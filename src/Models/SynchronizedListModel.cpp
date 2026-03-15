@@ -16,9 +16,9 @@
 SynchronizedListModel::SynchronizedListModel(QObject *parent) : ListModelBase(parent),
     _communicationHandler(new ResourceCommunicationHandler("synclist", this))
 {
-    connect(_communicationHandler,SIGNAL(newMessage(QVariant)), this, SLOT(messageReceived(QVariant)));
-    connect(_communicationHandler,SIGNAL(attachedChanged()), this, SIGNAL(connectedChanged()));
-    connect(_communicationHandler,SIGNAL(stateChanged()), this, SIGNAL(modelStateChanged()));
+    connect(_communicationHandler, &ResourceCommunicationHandler::newMessage, this, &SynchronizedListModel::messageReceived);
+    connect(_communicationHandler, &ResourceCommunicationHandler::attachedChanged, this, &SynchronizedListModel::connectedChanged);
+    connect(_communicationHandler, &ResourceCommunicationHandler::stateChanged, this, &SynchronizedListModel::modelStateChanged);
 }
 
 QVariant SynchronizedListModel::data(const QModelIndex &index, int role) const

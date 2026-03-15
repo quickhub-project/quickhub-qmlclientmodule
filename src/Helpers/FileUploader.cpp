@@ -89,7 +89,7 @@ void FileUploader::uploadFile(QString filename, QString endpoint, QString addres
     QNetworkReply *reply = _nam->post(request, multiPart);
     qDebug()<<reply->errorString();
     connect(reply, &QNetworkReply::finished, this, &FileUploader::requestFinished);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(requestError(QNetworkReply::NetworkError)));
+    connect(reply, &QNetworkReply::errorOccurred, this, &FileUploader::requestError);
     multiPart->setParent(reply); // delete the multiPart with the reply
 }
 
