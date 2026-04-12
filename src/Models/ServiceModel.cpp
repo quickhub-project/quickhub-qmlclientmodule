@@ -56,7 +56,10 @@ void ServiceModel::newMessage(QVariant message)
     if(cb.isCallable())
     {
         auto engine = qjsEngine(this);
-        cb.call( QJSValueList{ engine->toScriptValue(arg) } );
+        if(engine)
+            cb.call( QJSValueList{ engine->toScriptValue(arg) } );
+        else
+            qWarning() << "ServiceModel::newMessage - QJSEngine is null, cannot invoke callback for uid:" << uid;
     }
 }
 

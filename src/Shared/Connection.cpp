@@ -73,11 +73,11 @@ void Connection::setSocket(QWebSocket *socket)
 {
     if(_socket)
     {
-        QObject::disconnect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
+        QObject::disconnect(_socket, &QWebSocket::errorOccurred, this, &Connection::errorSlot);
         QObject::disconnect(_socket, &QWebSocket::connected, this, &Connection::socketConnected);
         QObject::disconnect(_socket, &QWebSocket::disconnected, this, &Connection::socketDisconnected);
-        QObject::disconnect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(socketError(QAbstractSocket::SocketError)));
-        QObject::disconnect(_socket,SIGNAL(binaryMessageReceived(QByteArray)), this,SLOT(messageReceived(QByteArray)));
+        QObject::disconnect(_socket, &QWebSocket::errorOccurred, this, &Connection::socketError);
+        QObject::disconnect(_socket, &QWebSocket::binaryMessageReceived, this, &Connection::messageReceived);
         #ifndef WEB_ASSEMBLY
         QObject::disconnect(_socket, &QWebSocket::sslErrors, this, &Connection::sslErrors);
         typedef void (QWebSocket:: *sslErrorsSignal)(const QList<QSslError> &);
@@ -98,11 +98,11 @@ void Connection::setSocket(QWebSocket *socket)
 
     socket->setParent(this);
     _socket = socket;
-    QObject::connect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
+    QObject::connect(_socket, &QWebSocket::errorOccurred, this, &Connection::errorSlot);
     QObject::connect(_socket, &QWebSocket::connected, this, &Connection::socketConnected);
     QObject::connect(_socket, &QWebSocket::disconnected, this, &Connection::socketDisconnected);
-    QObject::connect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(socketError(QAbstractSocket::SocketError)));
-    QObject::connect(_socket,SIGNAL(binaryMessageReceived(QByteArray)), this,SLOT(messageReceived(QByteArray)));
+    QObject::connect(_socket, &QWebSocket::errorOccurred, this, &Connection::socketError);
+    QObject::connect(_socket, &QWebSocket::binaryMessageReceived, this, &Connection::messageReceived);
     #ifndef WEB_ASSEMBLY
     QObject::connect(_socket, &QWebSocket::sslErrors, this, &Connection::sslErrors);
     typedef void (QWebSocket:: *sslErrorsSignal)(const QList<QSslError> &);

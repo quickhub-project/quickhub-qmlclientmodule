@@ -13,10 +13,10 @@ BaseCommunicationHandler::BaseCommunicationHandler(QObject *parent) : QObject(pa
     _connected(false)
 {
     _handle = new VirtualConnection(ConnectionManager::instance()->getConnection());
-    connect(_handle, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    connect(_handle,SIGNAL(messageReceived(QVariant)), this,SLOT(messageReceived(QVariant)));
-    connect(_handle, SIGNAL(connected()), this, SLOT(socketConnected()));
-    connect(ConnectionManager::instance(), SIGNAL(onStateChanged()), this, SLOT(handleServerState()));
+    connect(_handle, &VirtualConnection::disconnected, this, &BaseCommunicationHandler::socketDisconnected);
+    connect(_handle, &VirtualConnection::messageReceived, this, &BaseCommunicationHandler::messageReceived);
+    connect(_handle, &VirtualConnection::connected, this, &BaseCommunicationHandler::socketConnected);
+    connect(ConnectionManager::instance(), &ConnectionManager::onStateChanged, this, &BaseCommunicationHandler::handleServerState);
 }
 
 BaseCommunicationHandler::~BaseCommunicationHandler()

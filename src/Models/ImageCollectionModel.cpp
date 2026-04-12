@@ -12,9 +12,9 @@
 ImageCollectionModel::ImageCollectionModel(QObject *parent) : QAbstractListModel(parent),
     _handler(new ResourceCommunicationHandler("imgcoll", this))
 {
-    connect(_handler,SIGNAL(newMessage(QVariant)), this, SLOT(messageReceived(QVariant)));
-    connect(_handler,SIGNAL(attachedChanged()), this, SIGNAL(connectedChanged()));
-    connect(_handler,SIGNAL(stateChanged()), this, SIGNAL(modelStateChanged()));
+    connect(_handler, &ResourceCommunicationHandler::newMessage, this, &ImageCollectionModel::messageReceived);
+    connect(_handler, &ResourceCommunicationHandler::attachedChanged, this, &ImageCollectionModel::connectedChanged);
+    connect(_handler, &ResourceCommunicationHandler::stateChanged, this, &ImageCollectionModel::modelStateChanged);
 }
 
 QString ImageCollectionModel::resource() const

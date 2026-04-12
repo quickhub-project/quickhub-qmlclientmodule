@@ -12,9 +12,9 @@
 SynchronizedObjectModel::SynchronizedObjectModel(QObject *parent) : QQmlPropertyMap(this, parent),
     _communicationHandler(new ResourceCommunicationHandler("object", this))
 {
-    connect(_communicationHandler,SIGNAL(newMessage(QVariant)), this, SLOT(messageReceived(QVariant)));
-    connect(_communicationHandler,SIGNAL(attachedChanged()), this, SIGNAL(connectedChanged()));
-    connect(_communicationHandler,SIGNAL(stateChanged()), this, SIGNAL(modelStateChanged()));
+    connect(_communicationHandler, &ResourceCommunicationHandler::newMessage, this, &SynchronizedObjectModel::messageReceived);
+    connect(_communicationHandler, &ResourceCommunicationHandler::attachedChanged, this, &SynchronizedObjectModel::connectedChanged);
+    connect(_communicationHandler, &ResourceCommunicationHandler::stateChanged, this, &SynchronizedObjectModel::modelStateChanged);
 }
 
 SynchronizedObjectModel::~SynchronizedObjectModel()
@@ -99,6 +99,7 @@ void SynchronizedObjectModel::setFilter(const QVariantMap &filter)
     parameters[QStringLiteral("data")] = filter;
     msg[QStringLiteral("parameters")] = parameters;
     _communicationHandler->sendMessage(msg);
+    _filter = filter;
     Q_EMIT filterChanged();
 }
 

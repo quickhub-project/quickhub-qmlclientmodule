@@ -15,9 +15,9 @@
 SynchronizedListLogic::SynchronizedListLogic(QObject *parent) : QObject(parent),
     _communicationHandler(new ResourceCommunicationHandler("synclist", this))
 {
-    connect(_communicationHandler,SIGNAL(newMessage(QVariant)), this, SLOT(messageReceived(QVariant)));
-    connect(_communicationHandler,SIGNAL(attachedChanged()), this, SIGNAL(connectedChanged()));
-    connect(_communicationHandler,SIGNAL(stateChanged()), this, SLOT(stateChanged()));
+    connect(_communicationHandler, &ResourceCommunicationHandler::newMessage, this, &SynchronizedListLogic::messageReceived);
+    connect(_communicationHandler, &ResourceCommunicationHandler::attachedChanged, this, &SynchronizedListLogic::connectedChanged);
+    connect(_communicationHandler, &ResourceCommunicationHandler::stateChanged, this, &SynchronizedListLogic::stateChanged);
 }
 
 QString SynchronizedListLogic::getUserIDForIndex(int index)
