@@ -34,6 +34,7 @@ private:
 signals:
     void tokenChanged();
     void imageIDChanged();
+    void uploadFinished(bool success, const QString &errorString);
 
 private slots:
     void requestFinished();

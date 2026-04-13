@@ -24,7 +24,7 @@
 #include "Models/SynchronizedObjectListModel.h"
 #include "Models/FilteredDeviceModel.h"
 #include "Core/StandaloneDevice.h"
-//#include "FileUploader.h"
+#include "Helpers/FileUploader.h"
 #include <qqml.h>
 class InitQuickHub
 {
@@ -50,7 +50,7 @@ public:
         qmlRegisterSingletonType<StandaloneDevice>(uri, 1, 0, "StandaloneDevice", &StandaloneDevice::instanceAsQObject);
         qmlRegisterType<SynchronizedObjectListModel>(uri, 1, 0, "SynchronizedListLookupModel");
 
-//        qmlRegisterType<FileUploader>(uri, 1, 0, "FileUploader");
+        qmlRegisterType<FileUploader>(uri, 1, 0, "FileUploader");
     }
 };
 

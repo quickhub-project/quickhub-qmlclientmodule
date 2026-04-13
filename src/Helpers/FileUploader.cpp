@@ -2,15 +2,16 @@
 #include <QHttpMultiPart>
 #include <QNetworkAccessManager>
 #include "../Core/CloudModel.h"
-
+#include "../Core/ConnectionManager.h"
 #include <QFile>
 #include <QUrlQuery>
+#include <QMimeDatabase>
 
 FileUploader::FileUploader(QObject *parent) : QObject(parent)
 {
     _nam = new QNetworkAccessManager(this);
-    _host = QUrl(CloudModel::instance()->getServer()).host();
-    connect(CloudModel::instance(), &CloudModel::onServerUrlChanged, this, &FileUploader::hostNameChanged);
+    _host = QUrl(ConnectionManager::instance()->getServer()).host();
+    connect(ConnectionManager::instance(), &ConnectionManager::onServerUrlChanged, this, &FileUploader::hostNameChanged);
 }
 
 void FileUploader::uploadImage(QString filename)
@@ -49,48 +50,49 @@ void FileUploader::uploadFile(QString filename, QString endpoint, QString addres
 {
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
+    QString localPath = filename;
+    localPath.remove("file://");
+    QString displayName = QUrl::fromLocalFile(localPath).fileName();
 
-    QHttpPart textPart;
-    textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"upload\""));
-    textPart.setBody("finish");
+    QMimeDatabase mimeDb;
+    QMimeType mimeType = mimeDb.mimeTypeForFile(localPath);
 
-
-    QHttpPart imagePart;
-    imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("file"));
-    imagePart.setHeader(QNetworkRequest::ContentDispositionHeader,
-                        QVariant("form-data; name=\"file1\"; filename=\""+QUrl::fromLocalFile(filename).fileName()+"\""));
-    QFile *file = new QFile(filename.remove("file://"));
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(mimeType.name()));
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                        QVariant("form-data; name=\"file\"; filename=\"" + displayName + "\""));
+    QFile *file = new QFile(localPath);
 
     if(!file->open(QIODevice::ReadOnly))
     {
-      qDebug()<<filename;
+      qDebug()<<localPath;
       qDebug()<<"could not open file";
       qDebug()<<file->errorString();
     }
 
-    imagePart.setBodyDevice(file);
-    file->setParent(multiPart); // we cannot delete the file now, so delete it with the multiPart
+    filePart.setBodyDevice(file);
+    file->setParent(multiPart);
 
-    multiPart->append(textPart);
-    multiPart->append(imagePart);
+    multiPart->append(filePart);
 
     QUrlQuery query;
     query.addQueryItem("token",_token);
 
     QUrl url;
     url.setHost(_host);
-    url.setScheme("https");
+    url.setScheme("http");
     url.setQuery(query);
-    url.setPath("/qhapi/"+endpoint+"/"+address);
+    url.setPort(8080);
+    url.setPath("/" + endpoint + "/" + address);
 
     QNetworkRequest request(url);
-      qDebug()<<url;
+    qDebug()<<url;
 
     QNetworkReply *reply = _nam->post(request, multiPart);
     qDebug()<<reply->errorString();
     connect(reply, &QNetworkReply::finished, this, &FileUploader::requestFinished);
     connect(reply, &QNetworkReply::errorOccurred, this, &FileUploader::requestError);
-    multiPart->setParent(reply); // delete the multiPart with the reply
+    multiPart->setParent(reply);
 }
 
 void FileUploader::requestFinished()
@@ -99,25 +101,24 @@ void FileUploader::requestFinished()
     if(!reply)
         return;
 
-    qDebug()<<reply->errorString();
+    bool success = reply->error() == QNetworkReply::NoError;
+    Q_EMIT uploadFinished(success, reply->errorString());
 
-    delete reply;
-    reply = nullptr;
+    reply->deleteLater();
 }
 
 void FileUploader::requestError(QNetworkReply::NetworkError code)
 {
+    Q_UNUSED(code)
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     if(!reply)
         return;
 
-    qDebug()<<Q_FUNC_INFO<<" "<<reply->errorString();
-
-    delete reply;
-    reply = nullptr;
+    Q_EMIT uploadFinished(false, reply->errorString());
+    reply->deleteLater();
 }
 
 void FileUploader::hostNameChanged()
 {
-    _host = QUrl(CloudModel::instance()->getServer()).host();
+    _host = QUrl(ConnectionManager::instance()->getServer()).host();
 }

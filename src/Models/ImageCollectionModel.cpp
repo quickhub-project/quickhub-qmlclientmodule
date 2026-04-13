@@ -121,7 +121,22 @@ void ImageCollectionModel::messageReceived(QVariant message)
         beginInsertRows(QModelIndex(),_data.count(),_data.count());
         _data.append(item);
         endInsertRows();
+        return;
+    }
 
+    if(cmd == "imgcoll:removed")
+    {
+        QString uid = parameters["uid"].toString();
+        for(int i = 0; i < _data.count(); i++)
+        {
+            if(_data[i].toMap()["uid"].toString() == uid)
+            {
+                beginRemoveRows(QModelIndex(), i, i);
+                _data.removeAt(i);
+                endRemoveRows();
+                return;
+            }
+        }
     }
 }
 

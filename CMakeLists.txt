@@ -25,8 +25,8 @@ file(GLOB_RECURSE QML_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 # collect C++ sources and headers from src/cpp
 file(GLOB_RECURSE CPP_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/**/*.cpp")
 file(GLOB_RECURSE CPP_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/**/*.h" )
-list(REMOVE_ITEM CPP_SOURCES "src/Helpers/FileUploader.cpp")
-list(REMOVE_ITEM CPP_HEADERS "src/Helpers/FileUploader.h")
+#list(REMOVE_ITEM CPP_SOURCES "src/Helpers/FileUploader.cpp")
+#list(REMOVE_ITEM CPP_HEADERS "src/Helpers/FileUploader.h")
 
 
 qt_add_qml_module(QuickHubClient
