@@ -275,7 +275,7 @@ void CloudModel::messageReceived(const QVariant& data)
     QVariantMap answer = data.toMap();
     QVariantMap payload = answer["payload"].toMap();
     QString command = answer["command"].toString();
-
+    int errorCode =  answer["errrorcode"].toInt();
 
     if(command == "quickhub:connect:success")
     {
@@ -291,7 +291,6 @@ void CloudModel::messageReceived(const QVariant& data)
     if(command == "user:add:failed")
     {
         _errorString =  answer["errorstring"].toString();
-        int errorCode =  answer["errrorcode"].toInt();
         Q_EMIT onErrorStringChanged();
         _addUserCb.call(QJSValueList { false, errorCode });
         return;
@@ -303,14 +302,13 @@ void CloudModel::messageReceived(const QVariant& data)
         _connectionManager->setConnectionState(ConnectionManager::STATE_Authenticated);
         _user = payload["user"].toMap();
         Q_EMIT currentUserChanged();
-        _loginCb.call(QJSValueList { true, 0 });
+        _loginCb.call(QJSValueList { true, errorCode });
         return;
     }
 
     if(command == "user:login:failed")
     {
         _connectionManager->setConnectionState(ConnectionManager::STATE_Connected);
-        int errorCode =  answer["errrorcode"].toInt();
         _errorString =  answer["errorstring"].toString();
         Q_EMIT onErrorStringChanged();
         _loginCb.call(QJSValueList { false , errorCode});
@@ -331,7 +329,6 @@ void CloudModel::messageReceived(const QVariant& data)
 
     if(command == "user:changepassword:failed")
     {
-        int errorCode =  answer["errrorcode"].toInt();
         _errorString =  answer["errorstring"].toString();
         Q_EMIT onErrorStringChanged();
         _changePwCb.call(QJSValueList { false , errorCode});
@@ -346,7 +343,6 @@ void CloudModel::messageReceived(const QVariant& data)
 
     if(command == "user:delete:failed")
     {
-        int errorCode =  answer["errrorcode"].toInt();
         _errorString =  answer["errorstring"].toString();
         Q_EMIT onErrorStringChanged();
         _deleteUserCb.call(QJSValueList { false , errorCode});
@@ -361,7 +357,6 @@ void CloudModel::messageReceived(const QVariant& data)
 
     if(command == "user:setpermission:failed")
     {
-        int errorCode =  answer["errrorcode"].toInt();
         _setPermissionCb.call(QJSValueList { false , errorCode});
         return;
     }
