@@ -173,7 +173,8 @@ void SynchronizedObjectModel::messageReceived(QVariant message)
         QString key = parameters["property"].toString();
         QString errString = msg["errorstring"].toString();
         QString errCode = msg["errorcode"].toString();
-
+        QVariant value = parameters["data"];
+        this->insert(key, value);
         if(_callbacks.contains(key))
         {
             auto cb = _callbacks.value(key);
