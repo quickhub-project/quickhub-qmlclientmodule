@@ -14,9 +14,9 @@ FileUploader::FileUploader(QObject *parent) : QObject(parent)
     connect(ConnectionManager::instance(), &ConnectionManager::onServerUrlChanged, this, &FileUploader::hostNameChanged);
 }
 
-void FileUploader::uploadImage(QString filename)
+void FileUploader::uploadImage(QString filename, QString serverFilename)
 {
-    uploadFile(filename, "images", imageID());
+    uploadFile(filename, "images", imageID(), serverFilename);
 }
 
 void FileUploader::sendFileToDevice(QString filename, QString deviceID)
@@ -46,13 +46,15 @@ void FileUploader::setImageID(const QString &imageID)
     Q_EMIT imageIDChanged();
 }
 
-void FileUploader::uploadFile(QString filename, QString endpoint, QString address)
+void FileUploader::uploadFile(QString filename, QString endpoint, QString address, QString serverFilename)
 {
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
     QString localPath = filename;
     localPath.remove("file://");
-    QString displayName = QUrl::fromLocalFile(localPath).fileName();
+    QString displayName = serverFilename.isEmpty()
+                              ? QUrl::fromLocalFile(localPath).fileName()
+                              : serverFilename;
 
     QMimeDatabase mimeDb;
     QMimeType mimeType = mimeDb.mimeTypeForFile(localPath);

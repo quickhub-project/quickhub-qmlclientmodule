@@ -15,7 +15,7 @@ class FileUploader : public QObject
 
 public:
     explicit FileUploader(QObject *parent = nullptr);
-    Q_INVOKABLE void uploadImage(QString filename);
+    Q_INVOKABLE void uploadImage(QString filename, QString serverFilename = QString());
     Q_INVOKABLE void sendFileToDevice(QString filename, QString deviceID);
 
     QString token() const;
@@ -25,7 +25,7 @@ public:
     void setImageID(const QString &imageID);
 
 private:
-    void uploadFile(QString filename, QString endpoint, QString address);
+    void uploadFile(QString filename, QString endpoint, QString address, QString serverFilename = QString());
     QString _token;
     QString _imageID;
     QString _host;
